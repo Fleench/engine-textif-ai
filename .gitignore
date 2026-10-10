@@ -1,0 +1,7 @@
+a.out
+engine.js
+engine.wasm
+__pycache__/
+*.o
+.TRASH/
+.trash/
