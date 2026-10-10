@@ -1,0 +1,53 @@
+\doxysection{Game\+Object.\+h}
+\hypertarget{engine_2GameObject_8h_source}{}\label{engine_2GameObject_8h_source}\index{engine/GameObject.h@{engine/GameObject.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GAMEOBJECT\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GAMEOBJECT\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cctype>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structAction}{Action}};}
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classGame}{Game}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }GameObject\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{using\ }VerbFn\ =\ std::function<void(\doxymbox{\hyperlink{classGame}{Game}}\&,\ GameObject*,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structAction}{Action}}\&)>;}
+\DoxyCodeLine{00015\ \ \ \ \ std::map<std::string,\ VerbFn>\ verbs;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ supports(\textcolor{keyword}{const}\ std::string\&\ name);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ supports(\textcolor{keyword}{const}\ std::string\&\ name,\ VerbFn\ func);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ std::string\ id;}
+\DoxyCodeLine{00021\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00022\ \ \ \ \ std::string\ description;}
+\DoxyCodeLine{00023\ \ \ \ \ std::map<std::string,\ bool>\ flags;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ GameObject(\textcolor{keyword}{const}\ std::string\&\ n)\ :\ id(n),\ name(n)\ \{\}}
+\DoxyCodeLine{00026\ \ \ \ \ GameObject(\textcolor{keyword}{const}\ std::string\&\ i,\ \textcolor{keyword}{const}\ std::string\&\ n)\ :\ id(i),\ name(n)\ \{\}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~GameObject()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ GameObject\&\ setDescription(\textcolor{keyword}{const}\ std::string\&\ desc)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ description\ =\ desc;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ std::string\ getDisplayName()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ name.empty()\ ?\ id\ :\ name;\ \}}
+\DoxyCodeLine{00035\ \ \ \ \ std::string\ getMatchName()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ std::string\ s\ =\ getDisplayName();}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ c\ :\ s)\ c\ =\ std::tolower((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})c);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ s;}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ GameObject\&\ setFlag(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keywordtype}{bool}\ val\ =\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ flags[key]\ =\ val;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

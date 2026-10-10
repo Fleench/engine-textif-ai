@@ -1,0 +1,61 @@
+\doxysection{Item.\+h}
+\hypertarget{engine_2Item_8h_source}{}\label{engine_2Item_8h_source}\index{engine/Item.h@{engine/Item.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ITEM\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ITEM\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}GameObject.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classGame}{Game}};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }ItemDef\ \{}
+\DoxyCodeLine{00012\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00013\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00014\ \ \ \ \ std::string\ description;}
+\DoxyCodeLine{00015\ \ \ \ \ std::function<void(\doxymbox{\hyperlink{classGame}{Game}}\&,\ \textcolor{keyword}{const}\ std::string\&)>\ onUse;}
+\DoxyCodeLine{00016\ \ \ \ \ std::function<void(\doxymbox{\hyperlink{classGame}{Game}}\&,\ \textcolor{keyword}{class}\ \doxymbox{\hyperlink{classItem}{Item}}*)>\ onTake;}
+\DoxyCodeLine{00017\ \ \ \ \ std::map<std::string,\ std::function<void(\doxymbox{\hyperlink{classGame}{Game}}\&,\ \textcolor{keyword}{const}\ std::string\&)>>\ customVerbs;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ ItemDef()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00020\ \ \ \ \ ItemDef(\textcolor{keyword}{const}\ std::string\&\ n,\ \textcolor{keyword}{const}\ std::string\&\ d)\ :\ name(n),\ description(d)\ \{\}}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }Item\ :\ \textcolor{keyword}{public}\ GameObject\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classItemDef}{ItemDef}}*\ def\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 1;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ unique\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{bool}\ isLightSource\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ F-\/10}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ isLit\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ F-\/10}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ Item(\textcolor{keyword}{const}\ std::string\&\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classItemDef}{ItemDef}}*\ def)}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ :\ GameObject(\textcolor{keywordtype}{id},\ \textcolor{stringliteral}{"{}"{}}),\ def(def)\ \{\}}
+\DoxyCodeLine{00033\ \ \ \ \ }
+\DoxyCodeLine{00034\ \ \ \ \ std::string\ getDisplayName()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (def\ \&\&\ !def-\/>name.empty())\ \textcolor{keywordflow}{return}\ def-\/>name;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!name.empty())\ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ std::string\ getMatchName()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ std::string\ s\ =\ getDisplayName();}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ std::transform(s.begin(),\ s.end(),\ s.begin(),\ [](\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ c)\{\ return\ std::tolower(c);\ \});}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ s;}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{class\ }Storage\ :\ \textcolor{keyword}{public}\ Item\ \{}
+\DoxyCodeLine{00048\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00049\ \ \ \ \ std::vector<Item*>\ items;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ isOpen\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ isSupporter\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ F-\/9}}
+\DoxyCodeLine{00052\ \ \ \ \ Storage(\textcolor{keyword}{const}\ std::string\&\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classItemDef}{ItemDef}}*\ def)\ :\ Item(\textcolor{keywordtype}{id},\ def)\ \{\}}
+\DoxyCodeLine{00053\ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

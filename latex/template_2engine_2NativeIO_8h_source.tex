@@ -1,0 +1,109 @@
+\doxysection{Native\+IO.\+h}
+\hypertarget{template_2engine_2NativeIO_8h_source}{}\label{template_2engine_2NativeIO_8h_source}\index{template/engine/NativeIO.h@{template/engine/NativeIO.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ NATIVEIO\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ NATIVEIO\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}IOInterface.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <termios.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <sys/select.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <fcntl.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classNativeIO}{NativeIO}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classIOInterface}{IOInterface}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{struct\ }termios\ orig\_termios;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_mode\_active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ print(\textcolor{keyword}{const}\ std::string\&\ msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::cout\ <<\ msg;}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \ \ \ \ }
+\DoxyCodeLine{00024\ \ \ \ \ std::string\ requestInput()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (raw\_mode\_active)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ c\ =\ getCharAsync();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ !=\ 0)\ \textcolor{keywordflow}{return}\ std::string(1,\ c);}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::string\ input;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::getline(std::cin,\ input))\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::cin.eof())\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}quit"{}};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ std::cin.clear();}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input;}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ enterRawMode()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!raw\_mode\_active)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tcgetattr(STDIN\_FILENO,\ \&orig\_termios)\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }termios\ raw\ =\ orig\_termios;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ raw.c\_lflag\ \&=\ \string~(ECHO\ |\ ICANON);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ raw.c\_cc[VMIN]\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ raw.c\_cc[VTIME]\ =\ 0;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ tcsetattr(STDIN\_FILENO,\ TCSAFLUSH,\ \&raw);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ flags\ =\ fcntl(STDIN\_FILENO,\ F\_GETFL,\ 0);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ fcntl(STDIN\_FILENO,\ F\_SETFL,\ flags\ |\ O\_NONBLOCK);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ raw\_mode\_active\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ exitRawMode()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (raw\_mode\_active)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ tcsetattr(STDIN\_FILENO,\ TCSAFLUSH,\ \&orig\_termios);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ flags\ =\ fcntl(STDIN\_FILENO,\ F\_GETFL,\ 0);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ fcntl(STDIN\_FILENO,\ F\_SETFL,\ flags\ \&\ \string~O\_NONBLOCK);}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ raw\_mode\_active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ kbhit()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }timeval\ tv\ =\ \{\ 0L,\ 0L\ \};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ fd\_set\ fds;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ FD\_ZERO(\&fds);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ FD\_SET(STDIN\_FILENO,\ \&fds);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ select(STDIN\_FILENO\ +\ 1,\ \&fds,\ NULL,\ NULL,\ \&tv)\ >\ 0;}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{char}\ getCharAsync()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (kbhit())\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ c;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (read(STDIN\_FILENO,\ \&c,\ 1)\ >\ 0)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ enterAltScreen()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[?1049h"{}}\ <<\ std::flush;}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ exitAltScreen()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[?1049l"{}}\ <<\ std::flush;}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ sleepFrame(\textcolor{keywordtype}{int}\ ms)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ std::this\_thread::sleep\_for(std::chrono::milliseconds(ms));}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ }
+\DoxyCodeLine{00097\ \ \ \ \ \string~NativeIO()\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ exitRawMode();}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

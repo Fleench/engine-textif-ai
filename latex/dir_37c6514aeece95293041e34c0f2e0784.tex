@@ -1,0 +1,46 @@
+\doxysection{game Directory Reference}
+\hypertarget{dir_37c6514aeece95293041e34c0f2e0784}{}\label{dir_37c6514aeece95293041e34c0f2e0784}\index{game Directory Reference@{game Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries game.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md8}{}\doxysubsection{\texorpdfstring{Game Content (\`{}game/\+\`{})}{Game Content (\`{}game/\+\`{})}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md8}
+This directory contains the {\bfseries{demo content and specific narrative logic}} of the interactive fiction adventure.
+
+It stands separated from the underlying engine architecture. Here, the developer shapes the universe that the {\ttfamily engine/\+} enables, fully utilizing the newly integrated parser, mechanics, and verb systems.\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md9}{}\doxysubsection{\texorpdfstring{Purpose}{Purpose}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md9}
+The {\ttfamily game/\+} module is entirely responsible for:\+
+\begin{DoxyItemize}
+\item Defining the narrative world (Rooms, descriptions, atmospheres) and hooking into engine systems.
+\item Populating the universe with interactable objects (Items, Doors, NPCs).
+\item Establishing logical chains, puzzles, and consequences.
+\item Implementing real-\/time sequences via {\ttfamily \doxylink{classMiniGame}{Mini\+Game}} derivations.
+\end{DoxyItemize}\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md10}{}\doxysubsection{\texorpdfstring{Implementing Engine Features in Content}{Implementing Engine Features in Content}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md10}
+With the latest engine upgrades, content creators in this directory should utilize the following patterns:\+\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md11}{}\doxysubsubsection{\texorpdfstring{Dynamic Verb Dispatch}{Dynamic Verb Dispatch}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md11}
+Instead of hardcoding global {\ttfamily if/\+else} statements for actions, utilize the newly refactored verb dispatch. Define item interactions using the {\ttfamily supports(name, func)} API during item initialization. Example:\+ {\ttfamily my\+Sword-\/\texorpdfstring{$>$}{>}supports("{}swing"{}, \+[]\+()\{ return "{}You swing the sword."{}; \});}\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md12}{}\doxysubsubsection{\texorpdfstring{Environment \& Surfaces}{Environment \& Surfaces}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md12}
+
+\begin{DoxyItemize}
+\item Set {\ttfamily is\+Light\+Source} to true on items like lamps, and {\ttfamily is\+Dark} to true on underground rooms. The engine\textquotesingle{}s {\ttfamily is\+Lit} checks will automatically handle visibility.
+\item Utilize the {\ttfamily PUT X ON Y} mechanic by designating certain game objects as supporter surfaces.
+\end{DoxyItemize}\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md13}{}\doxysubsubsection{\texorpdfstring{Narrative Control}{Narrative Control}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md13}
+
+\begin{DoxyItemize}
+\item Customize narrator responses to avoid repetitive feedback.
+\item The player\textquotesingle{}s environment descriptions are automatically scaled based on their selected Verbosity Mode ({\ttfamily VERBOSE}, {\ttfamily BRIEF}, {\ttfamily SUPERBRIEF}).
+\end{DoxyItemize}\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md14}{}\doxysubsubsection{\texorpdfstring{Tracking Progress}{Tracking Progress}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md14}
+
+\begin{DoxyItemize}
+\item Increment score via the engine API when puzzles are solved. The Score, Moves, and Status Bar will automatically update to reflect the player\textquotesingle{}s current standing.
+\end{DoxyItemize}\hypertarget{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md15}{}\doxysubsection{\texorpdfstring{Usage \& Initialization}{Usage \& Initialization}}\label{dir_37c6514aeece95293041e34c0f2e0784_autotoc_md15}
+Content defined in this directory must {\ttfamily \#include} the necessary components from the engine (e.\+g., {\ttfamily engine/\+\+Game.\+h}, {\ttfamily engine/\+\+Item.\+h}) and interact strictly through the provided APIs.
+
+A standard implementation utilizes the Two-\/\+Phase Initialization pattern:\+
+\begin{DoxyEnumerate}
+\item {\bfseries{Creation}}:\+ {\ttfamily std::\+make\+\_\+unique} calls to populate the engine\textquotesingle{}s {\ttfamily std::\+map} registries.
+\item {\bfseries{Wiring}}:\+ Pointer assignments to connect exits and place items into inventories.
+\end{DoxyEnumerate}
+
+Because this directory is isolated from the framework, a developer may safely strip the contents of {\ttfamily game/\+} to build an entirely different narrative without risking the integrity of the engine. 

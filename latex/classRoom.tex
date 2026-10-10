@@ -1,0 +1,135 @@
+\doxysection{Room Class Reference}
+\hypertarget{classRoom}{}\label{classRoom}\index{Room@{Room}}
+Inheritance diagram for Room:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classRoom}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structRoom_1_1Exit}{Exit}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classRoom_ada76c97d634ca05825aa7b55011e1ff2}\label{classRoom_ada76c97d634ca05825aa7b55011e1ff2} 
+{\bfseries Room} (const std::\+string \&n)
+\item 
+\Hypertarget{classRoom_a5f73493c6662ff5e1a175a002bba040b}\label{classRoom_a5f73493c6662ff5e1a175a002bba040b} 
+{\bfseries Room} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\Hypertarget{classRoom_a3b01da20f942b3c02f789d4ca0796854}\label{classRoom_a3b01da20f942b3c02f789d4ca0796854} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+Exit} (const std::\+string \&dir, \doxymbox{\hyperlink{classRoom}{Room}} \texorpdfstring{$\ast$}{*}target, \doxymbox{\hyperlink{classDoor}{Door}} \texorpdfstring{$\ast$}{*}door=nullptr)
+\item 
+\Hypertarget{classRoom_aadcf6bf881e5ea7c152989684fadefa1}\label{classRoom_aadcf6bf881e5ea7c152989684fadefa1} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries set\+Short\+Description} (const std::\+string \&sd)
+\item 
+\Hypertarget{classRoom_adcbc00224e6a2fb7cdc7bb582fbc51fb}\label{classRoom_adcbc00224e6a2fb7cdc7bb582fbc51fb} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+Item} (\doxymbox{\hyperlink{classItem}{Item}} \texorpdfstring{$\ast$}{*}item)
+\item 
+\Hypertarget{classRoom_a4a99d5efe069b36e9732c5bedef7e55a}\label{classRoom_a4a99d5efe069b36e9732c5bedef7e55a} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+NPC} (\doxymbox{\hyperlink{classNPC}{NPC}} \texorpdfstring{$\ast$}{*}npc)
+\item 
+\Hypertarget{classRoom_ada76c97d634ca05825aa7b55011e1ff2}\label{classRoom_ada76c97d634ca05825aa7b55011e1ff2} 
+{\bfseries Room} (const std::\+string \&n)
+\item 
+\Hypertarget{classRoom_a5f73493c6662ff5e1a175a002bba040b}\label{classRoom_a5f73493c6662ff5e1a175a002bba040b} 
+{\bfseries Room} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\Hypertarget{classRoom_a3b01da20f942b3c02f789d4ca0796854}\label{classRoom_a3b01da20f942b3c02f789d4ca0796854} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+Exit} (const std::\+string \&dir, \doxymbox{\hyperlink{classRoom}{Room}} \texorpdfstring{$\ast$}{*}target, \doxymbox{\hyperlink{classDoor}{Door}} \texorpdfstring{$\ast$}{*}door=nullptr)
+\item 
+\Hypertarget{classRoom_aadcf6bf881e5ea7c152989684fadefa1}\label{classRoom_aadcf6bf881e5ea7c152989684fadefa1} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries set\+Short\+Description} (const std::\+string \&sd)
+\item 
+\Hypertarget{classRoom_adcbc00224e6a2fb7cdc7bb582fbc51fb}\label{classRoom_adcbc00224e6a2fb7cdc7bb582fbc51fb} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+Item} (\doxymbox{\hyperlink{classItem}{Item}} \texorpdfstring{$\ast$}{*}item)
+\item 
+\Hypertarget{classRoom_a4a99d5efe069b36e9732c5bedef7e55a}\label{classRoom_a4a99d5efe069b36e9732c5bedef7e55a} 
+\doxymbox{\hyperlink{classRoom}{Room}} \& {\bfseries add\+NPC} (\doxymbox{\hyperlink{classNPC}{NPC}} \texorpdfstring{$\ast$}{*}npc)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries supports} (const std::\+string \&name)
+\item 
+void {\bfseries supports} (const std::\+string \&name, Verb\+Fn func)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&n)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Description} (const std::\+string \&desc)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Flag} (const std::\+string \&key, bool val=true)
+\item 
+void {\bfseries supports} (const std::\+string \&name)
+\item 
+void {\bfseries supports} (const std::\+string \&name, Verb\+Fn func)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&n)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Description} (const std::\+string \&desc)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Flag} (const std::\+string \&key, bool val=true)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classRoom_afc476739be5a675fccf3a72d68bb8249}\label{classRoom_afc476739be5a675fccf3a72d68bb8249} 
+std::\+string {\bfseries short\+Description}
+\item 
+\Hypertarget{classRoom_a633588058518068611da209852f0ca2e}\label{classRoom_a633588058518068611da209852f0ca2e} 
+bool {\bfseries visited} = false
+\item 
+\Hypertarget{classRoom_aa13697cd4a4b16130b9c0b462f9126bf}\label{classRoom_aa13697cd4a4b16130b9c0b462f9126bf} 
+bool {\bfseries is\+Dark} = false
+\item 
+\Hypertarget{classRoom_a97ab8d9f8219f5bccdb6216a8354a28d}\label{classRoom_a97ab8d9f8219f5bccdb6216a8354a28d} 
+std::\+vector$<$ \doxymbox{\hyperlink{classItem}{Item}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries items}
+\item 
+\Hypertarget{classRoom_a442ff21993154e1a82376a31afc2855a}\label{classRoom_a442ff21993154e1a82376a31afc2855a} 
+std::\+vector$<$ \doxymbox{\hyperlink{classNPC}{NPC}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries npcs}
+\item 
+\Hypertarget{classRoom_af3b8f001b77960a196f2c72895e10bd0}\label{classRoom_af3b8f001b77960a196f2c72895e10bd0} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structRoom_1_1Exit}{Exit}} $>$ {\bfseries exits}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+map$<$ std::\+string, Verb\+Fn $>$ {\bfseries verbs}
+\item 
+std::\+string {\bfseries id}
+\item 
+std::\+string {\bfseries name}
+\item 
+std::\+string {\bfseries description}
+\item 
+std::\+map$<$ std::\+string, bool $>$ {\bfseries flags}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+using {\bfseries Verb\+Fn} = std::\+function$<$void(\doxymbox{\hyperlink{classGame}{Game}}\&, \doxymbox{\hyperlink{classGameObject}{Game\+Object}}\texorpdfstring{$\ast$}{*}, const \doxymbox{\hyperlink{structAction}{Action}}\&)$>$
+\item 
+using {\bfseries Verb\+Fn} = std::\+function$<$void(\doxymbox{\hyperlink{classGame}{Game}}\&, \doxymbox{\hyperlink{classGameObject}{Game\+Object}}\texorpdfstring{$\ast$}{*}, const \doxymbox{\hyperlink{structAction}{Action}}\&)$>$
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+engine/\+Room.\+h\item 
+template/\+engine/\+Room.\+h\end{DoxyCompactItemize}

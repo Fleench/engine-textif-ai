@@ -1,0 +1,177 @@
+\doxysection{Game.\+h}
+\hypertarget{engine_2Game_8h_source}{}\label{engine_2Game_8h_source}\index{engine/Game.h@{engine/Game.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GAME\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GAME\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}IOInterface.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}GameObject.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}Item.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}Door.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}Room.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}NPC.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}MiniGame.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}Parser.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}SaveLoad.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }Game\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<Room>>\ rooms;}
+\DoxyCodeLine{00024\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<ItemDef>>\ itemDefs;}
+\DoxyCodeLine{00025\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<Item>>\ items;}
+\DoxyCodeLine{00026\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<Door>>\ doors;}
+\DoxyCodeLine{00027\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<NPC>>\ npcs;}
+\DoxyCodeLine{00028\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<Storage>>\ storages;}
+\DoxyCodeLine{00029\ \ \ \ \ std::map<std::string,\ std::unique\_ptr<MiniGame>>\ miniGames;}
+\DoxyCodeLine{00030\ \ \ \ \ }
+\DoxyCodeLine{00031\ \ \ \ \ std::vector<Item*>\ inventory;}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{classRoom}{Room}}*\ currentRoom\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00033\ \ \ \ \ std::map<std::string,\ bool>\ globalFlags;}
+\DoxyCodeLine{00034\ \ \ \ \ std::function<bool(Game\&)>\ winCondition;}
+\DoxyCodeLine{00035\ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structGame_1_1DialogueOption}{DialogueOption}}\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::string\ targetNode;}
+\DoxyCodeLine{00039\ \ \ \ \ \};}
+\DoxyCodeLine{00040\ \ \ \ \ std::string\ activeDialogueNode;}
+\DoxyCodeLine{00041\ \ \ \ \ std::vector<DialogueOption>\ currentDialogueOptions;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{bool}\ inDialogue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00043\ \ \ \ \ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ isRunning\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structGame_1_1VerbDef}{VerbDef}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ std::function<void(Game\&,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structAction}{Action}}\&)>\ defaultFn;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ needsArg\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ std::string\ helpText;}
+\DoxyCodeLine{00051\ \ \ \ \ \};}
+\DoxyCodeLine{00052\ \ \ \ \ std::map<std::string,\ VerbDef>\ verbRegistry;}
+\DoxyCodeLine{00053\ \ \ \ \ std::map<std::string,\ std::string>\ verbSynonyms;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ registerDefaultVerbs();}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ overrideVerbDefault(\textcolor{keyword}{const}\ std::string\&\ verbName,\ std::function<\textcolor{keywordtype}{void}(Game\&,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structAction}{Action}}\&)>\ fn);}
+\DoxyCodeLine{00056\ \ \ \ \ }
+\DoxyCodeLine{00057\ \ \ \ \ std::map<std::string,\ Preposition>\ prepMap;}
+\DoxyCodeLine{00058\ \ \ \ \ std::map<std::string,\ std::string>\ objectSynonyms;}
+\DoxyCodeLine{00059\ \ \ \ \ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ F-\/10\ Darkness}}
+\DoxyCodeLine{00061\ \ \ \ \ std::set<std::string>\ darknessAllowedVerbs;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{bool}\ isLit()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ \ \ \ \ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ F-\/11\ Narrator\ response\ variety}}
+\DoxyCodeLine{00065\ \ \ \ \ std::map<std::string,\ std::vector<std::string>>\ responses;}
+\DoxyCodeLine{00066\ \ \ \ \ std::map<std::string,\ int>\ lastResponseIdx;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ addResponse(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keyword}{const}\ std::vector<std::string>\&\ variants);}
+\DoxyCodeLine{00068\ \ \ \ \ std::string\ respond(\textcolor{keyword}{const}\ std::string\&\ key);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{classIOInterface}{IOInterface}}*\ io;}
+\DoxyCodeLine{00071\ \ \ \ \ Game(\doxymbox{\hyperlink{classIOInterface}{IOInterface}}*\ io);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{enum}\ Verbosity\ \{\ BRIEF,\ VERBOSE,\ SUPERBRIEF\ \};}
+\DoxyCodeLine{00074\ \ \ \ \ Verbosity\ verbosityMode\ =\ BRIEF;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{int}\ score\ =\ 0;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ maxScore\ =\ 0;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{int}\ moves\ =\ 0;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ addScore(\textcolor{keywordtype}{int}\ points);}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ setMaxScore(\textcolor{keywordtype}{int}\ points);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ F-\/4\ Pronouns}}
+\DoxyCodeLine{00083\ \ \ \ \ std::string\ lastObject;}
+\DoxyCodeLine{00084\ \ \ \ \ std::string\ lastNPC;}
+\DoxyCodeLine{00085\ \ \ \ \ std::string\ lastPlural;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ F-\/5\ AGAIN}}
+\DoxyCodeLine{00088\ \ \ \ \ std::string\ lastCommand;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ F-\/8\ OOPS}}
+\DoxyCodeLine{00091\ \ \ \ \ std::string\ lastFailedCommand;}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{int}\ firstUnknownWordIndex\ =\ -\/1;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ F-\/6\ Disambiguation}}
+\DoxyCodeLine{00095\ \ \ \ \ std::string\ pendingDisambiguationTarget;}
+\DoxyCodeLine{00096\ \ \ \ \ std::vector<std::string>\ pendingDisambiguationMatches;}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{structAction}{Action}}\ pendingDisambiguationAction;}
+\DoxyCodeLine{00098\ \ \ \ \ std::string\ disambiguationSlot;\ \textcolor{comment}{//\ "{}object"{}\ or\ "{}object2"{}}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasFlag(\textcolor{keyword}{const}\ std::string\&\ flag)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ 1.\ State\ and\ Flag\ Management}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ setFlag(\textcolor{keyword}{const}\ std::string\&\ flagName,\ \textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{bool}\ getFlag(\textcolor{keyword}{const}\ std::string\&\ flagName)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ 2.\ Inventory\ Management}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{bool}\ giveItemToPlayer(\textcolor{keyword}{const}\ std::string\&\ itemId);}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{bool}\ removeInvItem(\textcolor{keyword}{const}\ std::string\&\ itemId);}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{bool}\ playerHasItem(\textcolor{keyword}{const}\ std::string\&\ itemId)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ 3.\ Spatial\ and\ Entity\ Manipulation}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{bool}\ spawnItem(\textcolor{keyword}{const}\ std::string\&\ itemId,\ \textcolor{keyword}{const}\ std::string\&\ roomId);}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{bool}\ movePlayerTo(\textcolor{keyword}{const}\ std::string\&\ roomId);}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ moveItem(\textcolor{keyword}{const}\ std::string\&\ itemId,\ \textcolor{keyword}{const}\ std::string\&\ toRoomId);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ 4.\ Temporal\ Mechanisms}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structGame_1_1TimerInfo}{TimerInfo}}\ \{\ \textcolor{keywordtype}{int}\ remaining;\ std::string\ callbackId;\ \textcolor{keywordtype}{bool}\ paused;\ \};}
+\DoxyCodeLine{00118\ \ \ \ \ std::map<std::string,\ TimerInfo>\ timers;}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ createTimer(\textcolor{keywordtype}{int}\ seconds,\ \textcolor{keyword}{const}\ std::string\&\ callbackId);}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ cancelTimer(\textcolor{keyword}{const}\ std::string\&\ timerId);}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ pauseTimer(\textcolor{keyword}{const}\ std::string\&\ timerId);}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ resumeTimer(\textcolor{keyword}{const}\ std::string\&\ timerId);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{comment}{//\ 5.\ Reactive\ Hooks}}
+\DoxyCodeLine{00125\ \ \ \ \ std::map<std::string,\ std::vector<std::function<void()>>>\ eventHooks;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{void}\ registerEventHook(\textcolor{keyword}{const}\ std::string\&\ eventName,\ std::function<\textcolor{keywordtype}{void}()>\ hook);}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{void}\ triggerEvent(\textcolor{keyword}{const}\ std::string\&\ eventName);}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{void}\ clearEventHooks(\textcolor{keyword}{const}\ std::string\&\ eventName);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{//\ 6.\ Conversational\ Logistics}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{void}\ startDialogueTree(\textcolor{keyword}{const}\ std::string\&\ dialogueId);}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ addDialogueOption(\textcolor{keyword}{const}\ std::string\&\ text,\ \textcolor{keyword}{const}\ std::string\&\ targetNode);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ endDialogue();}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasSpokenTo(\textcolor{keyword}{const}\ std::string\&\ npcId);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ 7.\ Chromatic\ and\ Typographic\ Utilities}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{void}\ printColored(\textcolor{keyword}{const}\ std::string\&\ text,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{void}\ printBold(\textcolor{keyword}{const}\ std::string\&\ text);}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{void}\ printItalic(\textcolor{keyword}{const}\ std::string\&\ text);}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{void}\ clearScreen();}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ typewriterEffect(\textcolor{keyword}{const}\ std::string\&\ text,\ \textcolor{keywordtype}{int}\ msPerChar);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{//\ 8.\ Auditory\ and\ Sensory\ Implements}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{void}\ playAudio(\textcolor{keyword}{const}\ std::string\&\ filepath);}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ stopAudio();}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{void}\ setAudioVolume(\textcolor{keywordtype}{float}\ volume);}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{void}\ loopAudio(\textcolor{keyword}{const}\ std::string\&\ filepath);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{void}\ shakeScreen(\textcolor{keywordtype}{int}\ intensity,\ \textcolor{keywordtype}{int}\ duration);}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{void}\ flashScreen(\textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ 9.\ State\ Preservation}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ saveGame(\textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{void}\ loadGame(\textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{void}\ deleteSave(\textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \doxymbox{\hyperlink{structAction}{Action}}\ parseInput(\textcolor{keyword}{const}\ std::string\&\ input);}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{void}\ executeAction(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structAction}{Action}}\&\ action);}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ processCommand(\textcolor{keyword}{const}\ std::string\&\ input);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{void}\ init();}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{void}\ tick();}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{bool}\ isFinished()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{void}\ enterRealTimeMode();}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{void}\ exitRealTimeMode();}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{void}\ save(\textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{void}\ load(\textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00169\ \};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

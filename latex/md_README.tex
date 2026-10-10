@@ -1,0 +1,46 @@
+\chapter{SUMMA ARCHITECTONICA:\+ The Text Adventure Engine }
+\hypertarget{md_README}{}\label{md_README}\index{SUMMA ARCHITECTONICA: The Text Adventure Engine@{SUMMA ARCHITECTONICA: The Text Adventure Engine}}
+\label{md_README_autotoc_md16}%
+\Hypertarget{md_README_autotoc_md16}%
+
+
+{\bfseries{A Dual-\/\+Target Text Adventure Architecture}}
+
+Welcome to the root of the interactive fiction engine. Herein lies the entire repository, structured according to the principles of orderly design, cross-\/platform utility, and robust architectural separation.
+
+This repository provides an exact and truthful foundation for creating text-\/based worlds that compile securely for both local terminals and modern web browsers.\hypertarget{md_README_autotoc_md17}{}\doxysection{\texorpdfstring{Repository Overview}{Repository Overview}}\label{md_README_autotoc_md17}
+This project is a C++ text adventure/\+interactive fiction engine designed to be built for both native terminal execution and Web\+Assembly for browser deployment. The architecture strictly separates the core engine code from the specific game content.\hypertarget{md_README_autotoc_md18}{}\doxysubsection{\texorpdfstring{Directory Structure}{Directory Structure}}\label{md_README_autotoc_md18}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{{\ttfamily engine/\+}}}:\+ The core, framework, and I/\+O abstractions. This includes the command parser, I/\+O interface layer, state management, and all base definitions (now enhanced with dynamic verb dispatch, pronouns, disambiguation, darkness mechanics, and scoring). It contains {\bfseries{no}} game-\/specific data.
+\item {\bfseries{{\ttfamily game/\+}}}:\+ The demo content and game implementations. This is where rooms, items, NPCs, minigames, and logic unique to the game instance are implemented.
+\item {\bfseries{{\ttfamily docs/\+}}}:\+ (If present) Technical documentation detailing the engine\textquotesingle{}s subsystems.
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md19}{}\doxysection{\texorpdfstring{Recent Architectural Upgrades}{Recent Architectural Upgrades}}\label{md_README_autotoc_md19}
+The engine has been significantly expanded to support advanced interactive fiction features:\+
+\begin{DoxyItemize}
+\item {\bfseries{Advanced \doxylink{classParser}{Parser} Features}}:\+ Multi-\/command chaining ({\ttfamily .} and {\ttfamily ;}), pronoun tracking ({\ttfamily IT}, {\ttfamily HIM}, {\ttfamily HER}, {\ttfamily THEM}), and {\ttfamily AGAIN}/\+{\ttfamily OOPS} commands.
+\item {\bfseries{Dynamic Verb Dispatch}}:\+ A massive Part 3 Verb Dispatch Refactor introducing {\ttfamily verb\+Registry} and flexible {\ttfamily supports(name, func)} methodologies.
+\item {\bfseries{Environmental Mechanics}}:\+ Light and darkness tracking ({\ttfamily is\+Dark}, {\ttfamily is\+Light\+Source}, {\ttfamily is\+Lit}), as well as supporter surfaces ({\ttfamily PUT X ON Y}).
+\item {\bfseries{Narrative \& Gameplay}}:\+ Verbosity modes ({\ttfamily VERBOSE}, {\ttfamily BRIEF}, {\ttfamily SUPERBRIEF}), custom narrator responses, disambiguation prompts, and a comprehensive status bar tracking scoring and moves.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md20}{}\doxysection{\texorpdfstring{Architecture}{Architecture}}\label{md_README_autotoc_md20}
+The system distinguishes the unchanging physical rules of the universe ({\ttfamily engine/\+}) from the objects placed within it ({\ttfamily game/\+}).\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{Initialization}{Initialization}}\label{md_README_autotoc_md21}
+We enforce a robust {\bfseries{Two-\/\+Phase Initialization}} pattern to eliminate circular dependencies:\+
+\begin{DoxyEnumerate}
+\item {\bfseries{Creation Phase}}:\+ Instantiate entities into the master registry.
+\item {\bfseries{Wiring Phase}}:\+ Connect the instantiated pointers (placing items in rooms, linking room exits).
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{The I/\+O Layer}{The I/\+O Layer}}\label{md_README_autotoc_md22}
+To support dual-\/target deployment, all interaction is mediated by the {\ttfamily \doxylink{classIOInterface}{IOInterface}}. {\ttfamily \doxylink{classNativeIO}{Native\+IO}} handles standard terminal I/\+O. {\ttfamily \doxylink{classWebIO}{Web\+IO}} provides a seamless abstraction for Emscripten, capturing asynchronous input cleanly.\hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{Mini\+Games}{Mini\+Games}}\label{md_README_autotoc_md23}
+A core feature of the engine is the seamless transition between standard turn-\/based text adventure parsing and real-\/time interactive sequences called {\bfseries{Mini\+Games}}. Control passes into real-\/time loops that utilize terminal clearing and framerate control, and restores smoothly upon completion.\hypertarget{md_README_autotoc_md24}{}\doxysection{\texorpdfstring{Building the Project}{Building the Project}}\label{md_README_autotoc_md24}
+The project employs a dual-\/target build system utilizing {\ttfamily make}.\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{Native Build (Terminal)}{Native Build (Terminal)}}\label{md_README_autotoc_md25}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+ Produces an executable utilizing standard synchronous {\ttfamily cin}/\+{\ttfamily cout} logic.\hypertarget{md_README_autotoc_md26}{}\doxysubsection{\texorpdfstring{Web\+Assembly Build (Browser)}{Web\+Assembly Build (Browser)}}\label{md_README_autotoc_md26}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ wasm}
+
+\end{DoxyCode}
+ Produces the {\ttfamily .wasm} and {\ttfamily .js} bindings to run the engine in a browser, relying on the {\ttfamily \doxylink{classWebIO}{Web\+IO}} bridge to handle input asynchronously. 

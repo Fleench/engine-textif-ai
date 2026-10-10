@@ -1,0 +1,481 @@
+\doxysection{Game Class Reference}
+\hypertarget{classGame}{}\label{classGame}\index{Game@{Game}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structGame_1_1DialogueOption}{Dialogue\+Option}}
+\item 
+struct \doxymbox{\hyperlink{structGame_1_1VerbDef}{Verb\+Def}}
+\item 
+struct \doxymbox{\hyperlink{structGame_1_1TimerInfo}{Timer\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGame_a6396966f3d13c6cb465a42453f62f244}\label{classGame_a6396966f3d13c6cb465a42453f62f244} 
+enum {\bfseries Verbosity} \{ \newline
+{\bfseries BRIEF}
+, {\bfseries VERBOSE}
+, {\bfseries SUPERBRIEF}
+, {\bfseries BRIEF}
+, \newline
+{\bfseries VERBOSE}
+, {\bfseries SUPERBRIEF}
+ \}
+\item 
+\Hypertarget{classGame_a6396966f3d13c6cb465a42453f62f244}\label{classGame_a6396966f3d13c6cb465a42453f62f244} 
+enum {\bfseries Verbosity} \{ \newline
+{\bfseries BRIEF}
+, {\bfseries VERBOSE}
+, {\bfseries SUPERBRIEF}
+, {\bfseries BRIEF}
+, \newline
+{\bfseries VERBOSE}
+, {\bfseries SUPERBRIEF}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGame_ac606af64c7f7e683fd56b24314de43f3}\label{classGame_ac606af64c7f7e683fd56b24314de43f3} 
+void {\bfseries register\+Default\+Verbs} ()
+\item 
+\Hypertarget{classGame_a7d976fc16adee1293088f73668e7cf36}\label{classGame_a7d976fc16adee1293088f73668e7cf36} 
+void {\bfseries override\+Verb\+Default} (const std::\+string \&verb\+Name, std::\+function$<$ void(\doxymbox{\hyperlink{classGame}{Game}} \&, const \doxymbox{\hyperlink{structAction}{Action}} \&)$>$ fn)
+\item 
+\Hypertarget{classGame_ae4ffd97031cfa1cb0eccf9fb86d3643b}\label{classGame_ae4ffd97031cfa1cb0eccf9fb86d3643b} 
+bool {\bfseries is\+Lit} () const
+\item 
+\Hypertarget{classGame_a37fabd088dade5ce5c72920335246f2e}\label{classGame_a37fabd088dade5ce5c72920335246f2e} 
+void {\bfseries add\+Response} (const std::\+string \&key, const std::\+vector$<$ std::\+string $>$ \&variants)
+\item 
+\Hypertarget{classGame_ab30d17c6d52777ce2c77305de2cdc10c}\label{classGame_ab30d17c6d52777ce2c77305de2cdc10c} 
+std::\+string {\bfseries respond} (const std::\+string \&key)
+\item 
+\Hypertarget{classGame_a26b95e1361c3d138831a395fe29914ae}\label{classGame_a26b95e1361c3d138831a395fe29914ae} 
+{\bfseries Game} (\doxymbox{\hyperlink{classIOInterface}{IOInterface}} \texorpdfstring{$\ast$}{*}io)
+\item 
+\Hypertarget{classGame_a9bea79c406711f4efe122f7bd701c251}\label{classGame_a9bea79c406711f4efe122f7bd701c251} 
+void {\bfseries add\+Score} (int points)
+\item 
+\Hypertarget{classGame_a7fdfa3f20290df28c2cfe95f53706d5e}\label{classGame_a7fdfa3f20290df28c2cfe95f53706d5e} 
+void {\bfseries set\+Max\+Score} (int points)
+\item 
+\Hypertarget{classGame_a48db9a59cf727aa7d27338aff09316d2}\label{classGame_a48db9a59cf727aa7d27338aff09316d2} 
+bool {\bfseries has\+Flag} (const std::\+string \&flag) const
+\item 
+\Hypertarget{classGame_a473d9b8cc208f25989efcbb54d3f2c08}\label{classGame_a473d9b8cc208f25989efcbb54d3f2c08} 
+void {\bfseries set\+Flag} (const std::\+string \&flag\+Name, bool value)
+\item 
+\Hypertarget{classGame_a966047ecbecc51f3dd95c5ae2a57efdd}\label{classGame_a966047ecbecc51f3dd95c5ae2a57efdd} 
+bool {\bfseries get\+Flag} (const std::\+string \&flag\+Name) const
+\item 
+\Hypertarget{classGame_a820d8ff65d6c278b3762b2497746d584}\label{classGame_a820d8ff65d6c278b3762b2497746d584} 
+bool {\bfseries give\+Item\+To\+Player} (const std::\+string \&item\+Id)
+\item 
+\Hypertarget{classGame_a79624a8916355e6a041efe2721aa0124}\label{classGame_a79624a8916355e6a041efe2721aa0124} 
+bool {\bfseries remove\+Inv\+Item} (const std::\+string \&item\+Id)
+\item 
+\Hypertarget{classGame_a896f71ea25d6d2d8744a1137def005a5}\label{classGame_a896f71ea25d6d2d8744a1137def005a5} 
+bool {\bfseries player\+Has\+Item} (const std::\+string \&item\+Id) const
+\item 
+\Hypertarget{classGame_aec3eabb056c9749a1c4cd04f6f5a0e1b}\label{classGame_aec3eabb056c9749a1c4cd04f6f5a0e1b} 
+bool {\bfseries spawn\+Item} (const std::\+string \&item\+Id, const std::\+string \&room\+Id)
+\item 
+\Hypertarget{classGame_a10d901e1e55211e1523568f9bcffcc3c}\label{classGame_a10d901e1e55211e1523568f9bcffcc3c} 
+bool {\bfseries move\+Player\+To} (const std::\+string \&room\+Id)
+\item 
+\Hypertarget{classGame_ad20b900dbd9f8d9b4f95158e7d49cad1}\label{classGame_ad20b900dbd9f8d9b4f95158e7d49cad1} 
+bool {\bfseries move\+Item} (const std::\+string \&item\+Id, const std::\+string \&to\+Room\+Id)
+\item 
+\Hypertarget{classGame_ac88c0165bb0281da6e482876bfc0852b}\label{classGame_ac88c0165bb0281da6e482876bfc0852b} 
+void {\bfseries create\+Timer} (int seconds, const std::\+string \&callback\+Id)
+\item 
+\Hypertarget{classGame_a9629b82d3856339b4232b9b708544406}\label{classGame_a9629b82d3856339b4232b9b708544406} 
+void {\bfseries cancel\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_ac0f5fcc5004392f26adea6c1d63a955b}\label{classGame_ac0f5fcc5004392f26adea6c1d63a955b} 
+void {\bfseries pause\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_a06e8fd6478c2b5223325fad9de028a2f}\label{classGame_a06e8fd6478c2b5223325fad9de028a2f} 
+void {\bfseries resume\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_ae9af591bb6b3708267c851761554f480}\label{classGame_ae9af591bb6b3708267c851761554f480} 
+void {\bfseries register\+Event\+Hook} (const std::\+string \&event\+Name, std::\+function$<$ void()$>$ hook)
+\item 
+\Hypertarget{classGame_ac711cad0099ee554ea14b6c8a9450a68}\label{classGame_ac711cad0099ee554ea14b6c8a9450a68} 
+void {\bfseries trigger\+Event} (const std::\+string \&event\+Name)
+\item 
+\Hypertarget{classGame_a0b2e6a5bb3d51927a966557078c84eff}\label{classGame_a0b2e6a5bb3d51927a966557078c84eff} 
+void {\bfseries clear\+Event\+Hooks} (const std::\+string \&event\+Name)
+\item 
+\Hypertarget{classGame_a885ba88a07d33643d9bff69233f4ee9c}\label{classGame_a885ba88a07d33643d9bff69233f4ee9c} 
+void {\bfseries start\+Dialogue\+Tree} (const std::\+string \&dialogue\+Id)
+\item 
+\Hypertarget{classGame_a40dac6440dd8a46dae5816887c575f6f}\label{classGame_a40dac6440dd8a46dae5816887c575f6f} 
+void {\bfseries add\+Dialogue\+Option} (const std::\+string \&text, const std::\+string \&target\+Node)
+\item 
+\Hypertarget{classGame_a37cfddcefd1cc6dee275c46b90313956}\label{classGame_a37cfddcefd1cc6dee275c46b90313956} 
+void {\bfseries end\+Dialogue} ()
+\item 
+\Hypertarget{classGame_ae28995e5ac302717faa1a59277ea3e60}\label{classGame_ae28995e5ac302717faa1a59277ea3e60} 
+bool {\bfseries has\+Spoken\+To} (const std::\+string \&npc\+Id)
+\item 
+\Hypertarget{classGame_a04db3d9ed69e5377188d5a537d07dc70}\label{classGame_a04db3d9ed69e5377188d5a537d07dc70} 
+void {\bfseries print\+Colored} (const std::\+string \&text, int color)
+\item 
+\Hypertarget{classGame_aaf948b2efd1e605d8c7c37ff67751c9d}\label{classGame_aaf948b2efd1e605d8c7c37ff67751c9d} 
+void {\bfseries print\+Bold} (const std::\+string \&text)
+\item 
+\Hypertarget{classGame_ac365073b631c0d3e804649b16e522f64}\label{classGame_ac365073b631c0d3e804649b16e522f64} 
+void {\bfseries print\+Italic} (const std::\+string \&text)
+\item 
+\Hypertarget{classGame_a43a51eaa8b6fdb3dc6faa4d3417bad1e}\label{classGame_a43a51eaa8b6fdb3dc6faa4d3417bad1e} 
+void {\bfseries clear\+Screen} ()
+\item 
+\Hypertarget{classGame_acdef80efc0e3189cf8e8ba6f74c86be4}\label{classGame_acdef80efc0e3189cf8e8ba6f74c86be4} 
+void {\bfseries typewriter\+Effect} (const std::\+string \&text, int ms\+Per\+Char)
+\item 
+\Hypertarget{classGame_a01e68bf0777f2b966a6d3d62914206cd}\label{classGame_a01e68bf0777f2b966a6d3d62914206cd} 
+void {\bfseries play\+Audio} (const std::\+string \&filepath)
+\item 
+\Hypertarget{classGame_a3e590971a8ae03fe8e44d5b6c6527484}\label{classGame_a3e590971a8ae03fe8e44d5b6c6527484} 
+void {\bfseries stop\+Audio} ()
+\item 
+\Hypertarget{classGame_a11eb25db6760909e07b6d96c6021c4cd}\label{classGame_a11eb25db6760909e07b6d96c6021c4cd} 
+void {\bfseries set\+Audio\+Volume} (float volume)
+\item 
+\Hypertarget{classGame_a3573f777955cf90e06cb01a2b151c20a}\label{classGame_a3573f777955cf90e06cb01a2b151c20a} 
+void {\bfseries loop\+Audio} (const std::\+string \&filepath)
+\item 
+\Hypertarget{classGame_a1d02c89d1c3191fe4e721f00a6d4d61a}\label{classGame_a1d02c89d1c3191fe4e721f00a6d4d61a} 
+void {\bfseries shake\+Screen} (int intensity, int duration)
+\item 
+\Hypertarget{classGame_ad753d9670f256a8f909dde612c9e5bf3}\label{classGame_ad753d9670f256a8f909dde612c9e5bf3} 
+void {\bfseries flash\+Screen} (int color)
+\item 
+\Hypertarget{classGame_a029fe15e8ee49e529d9ba65920c15f98}\label{classGame_a029fe15e8ee49e529d9ba65920c15f98} 
+void {\bfseries save\+Game} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_ac73daf99ca0a0a54b82240d967b2f4a1}\label{classGame_ac73daf99ca0a0a54b82240d967b2f4a1} 
+void {\bfseries load\+Game} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_a9976a365fd6746881179711a7d84cd2c}\label{classGame_a9976a365fd6746881179711a7d84cd2c} 
+void {\bfseries delete\+Save} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_aef93295e0a998ea0c6781ec41bd586df}\label{classGame_aef93295e0a998ea0c6781ec41bd586df} 
+\doxymbox{\hyperlink{structAction}{Action}} {\bfseries parse\+Input} (const std::\+string \&input)
+\item 
+\Hypertarget{classGame_a72053e3df6b2c7b1bb21575126f10a41}\label{classGame_a72053e3df6b2c7b1bb21575126f10a41} 
+void {\bfseries execute\+Action} (const \doxymbox{\hyperlink{structAction}{Action}} \&action)
+\item 
+\Hypertarget{classGame_a66445e93af5d3a0e7b97fc5e0fe3362a}\label{classGame_a66445e93af5d3a0e7b97fc5e0fe3362a} 
+void {\bfseries process\+Command} (const std::\+string \&input)
+\item 
+\Hypertarget{classGame_a6f3a33940524b6ba9d83f627ccb14bbf}\label{classGame_a6f3a33940524b6ba9d83f627ccb14bbf} 
+void {\bfseries init} ()
+\item 
+\Hypertarget{classGame_adf1634a2d0c22f30f7c57e72fd2831bc}\label{classGame_adf1634a2d0c22f30f7c57e72fd2831bc} 
+void {\bfseries tick} ()
+\item 
+\Hypertarget{classGame_aca3fc9bc4a82b57111ca672e23ba38a0}\label{classGame_aca3fc9bc4a82b57111ca672e23ba38a0} 
+bool {\bfseries is\+Finished} () const
+\item 
+\Hypertarget{classGame_a667408238ebf95d5aa6cbb6e9101b282}\label{classGame_a667408238ebf95d5aa6cbb6e9101b282} 
+void {\bfseries enter\+Real\+Time\+Mode} ()
+\item 
+\Hypertarget{classGame_a86acef113dd534f732bf69c4cdec1909}\label{classGame_a86acef113dd534f732bf69c4cdec1909} 
+void {\bfseries exit\+Real\+Time\+Mode} ()
+\item 
+\Hypertarget{classGame_ae6901bd7e0b914ae16ec1b2f9268fccd}\label{classGame_ae6901bd7e0b914ae16ec1b2f9268fccd} 
+void {\bfseries save} (const std::\+string \&filename)
+\item 
+\Hypertarget{classGame_a2e3cf07afa6f8c87bb4e18098ae9302d}\label{classGame_a2e3cf07afa6f8c87bb4e18098ae9302d} 
+void {\bfseries load} (const std::\+string \&filename)
+\item 
+\Hypertarget{classGame_ac606af64c7f7e683fd56b24314de43f3}\label{classGame_ac606af64c7f7e683fd56b24314de43f3} 
+void {\bfseries register\+Default\+Verbs} ()
+\item 
+\Hypertarget{classGame_a7d976fc16adee1293088f73668e7cf36}\label{classGame_a7d976fc16adee1293088f73668e7cf36} 
+void {\bfseries override\+Verb\+Default} (const std::\+string \&verb\+Name, std::\+function$<$ void(\doxymbox{\hyperlink{classGame}{Game}} \&, const \doxymbox{\hyperlink{structAction}{Action}} \&)$>$ fn)
+\item 
+\Hypertarget{classGame_ae4ffd97031cfa1cb0eccf9fb86d3643b}\label{classGame_ae4ffd97031cfa1cb0eccf9fb86d3643b} 
+bool {\bfseries is\+Lit} () const
+\item 
+\Hypertarget{classGame_a37fabd088dade5ce5c72920335246f2e}\label{classGame_a37fabd088dade5ce5c72920335246f2e} 
+void {\bfseries add\+Response} (const std::\+string \&key, const std::\+vector$<$ std::\+string $>$ \&variants)
+\item 
+\Hypertarget{classGame_ab30d17c6d52777ce2c77305de2cdc10c}\label{classGame_ab30d17c6d52777ce2c77305de2cdc10c} 
+std::\+string {\bfseries respond} (const std::\+string \&key)
+\item 
+\Hypertarget{classGame_a26b95e1361c3d138831a395fe29914ae}\label{classGame_a26b95e1361c3d138831a395fe29914ae} 
+{\bfseries Game} (\doxymbox{\hyperlink{classIOInterface}{IOInterface}} \texorpdfstring{$\ast$}{*}io)
+\item 
+\Hypertarget{classGame_a9bea79c406711f4efe122f7bd701c251}\label{classGame_a9bea79c406711f4efe122f7bd701c251} 
+void {\bfseries add\+Score} (int points)
+\item 
+\Hypertarget{classGame_a7fdfa3f20290df28c2cfe95f53706d5e}\label{classGame_a7fdfa3f20290df28c2cfe95f53706d5e} 
+void {\bfseries set\+Max\+Score} (int points)
+\item 
+\Hypertarget{classGame_a48db9a59cf727aa7d27338aff09316d2}\label{classGame_a48db9a59cf727aa7d27338aff09316d2} 
+bool {\bfseries has\+Flag} (const std::\+string \&flag) const
+\item 
+\Hypertarget{classGame_a473d9b8cc208f25989efcbb54d3f2c08}\label{classGame_a473d9b8cc208f25989efcbb54d3f2c08} 
+void {\bfseries set\+Flag} (const std::\+string \&flag\+Name, bool value)
+\item 
+\Hypertarget{classGame_a966047ecbecc51f3dd95c5ae2a57efdd}\label{classGame_a966047ecbecc51f3dd95c5ae2a57efdd} 
+bool {\bfseries get\+Flag} (const std::\+string \&flag\+Name) const
+\item 
+\Hypertarget{classGame_a820d8ff65d6c278b3762b2497746d584}\label{classGame_a820d8ff65d6c278b3762b2497746d584} 
+bool {\bfseries give\+Item\+To\+Player} (const std::\+string \&item\+Id)
+\item 
+\Hypertarget{classGame_a79624a8916355e6a041efe2721aa0124}\label{classGame_a79624a8916355e6a041efe2721aa0124} 
+bool {\bfseries remove\+Inv\+Item} (const std::\+string \&item\+Id)
+\item 
+\Hypertarget{classGame_a896f71ea25d6d2d8744a1137def005a5}\label{classGame_a896f71ea25d6d2d8744a1137def005a5} 
+bool {\bfseries player\+Has\+Item} (const std::\+string \&item\+Id) const
+\item 
+\Hypertarget{classGame_aec3eabb056c9749a1c4cd04f6f5a0e1b}\label{classGame_aec3eabb056c9749a1c4cd04f6f5a0e1b} 
+bool {\bfseries spawn\+Item} (const std::\+string \&item\+Id, const std::\+string \&room\+Id)
+\item 
+\Hypertarget{classGame_a10d901e1e55211e1523568f9bcffcc3c}\label{classGame_a10d901e1e55211e1523568f9bcffcc3c} 
+bool {\bfseries move\+Player\+To} (const std::\+string \&room\+Id)
+\item 
+\Hypertarget{classGame_ad20b900dbd9f8d9b4f95158e7d49cad1}\label{classGame_ad20b900dbd9f8d9b4f95158e7d49cad1} 
+bool {\bfseries move\+Item} (const std::\+string \&item\+Id, const std::\+string \&to\+Room\+Id)
+\item 
+\Hypertarget{classGame_ac88c0165bb0281da6e482876bfc0852b}\label{classGame_ac88c0165bb0281da6e482876bfc0852b} 
+void {\bfseries create\+Timer} (int seconds, const std::\+string \&callback\+Id)
+\item 
+\Hypertarget{classGame_a9629b82d3856339b4232b9b708544406}\label{classGame_a9629b82d3856339b4232b9b708544406} 
+void {\bfseries cancel\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_ac0f5fcc5004392f26adea6c1d63a955b}\label{classGame_ac0f5fcc5004392f26adea6c1d63a955b} 
+void {\bfseries pause\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_a06e8fd6478c2b5223325fad9de028a2f}\label{classGame_a06e8fd6478c2b5223325fad9de028a2f} 
+void {\bfseries resume\+Timer} (const std::\+string \&timer\+Id)
+\item 
+\Hypertarget{classGame_ae9af591bb6b3708267c851761554f480}\label{classGame_ae9af591bb6b3708267c851761554f480} 
+void {\bfseries register\+Event\+Hook} (const std::\+string \&event\+Name, std::\+function$<$ void()$>$ hook)
+\item 
+\Hypertarget{classGame_ac711cad0099ee554ea14b6c8a9450a68}\label{classGame_ac711cad0099ee554ea14b6c8a9450a68} 
+void {\bfseries trigger\+Event} (const std::\+string \&event\+Name)
+\item 
+\Hypertarget{classGame_a0b2e6a5bb3d51927a966557078c84eff}\label{classGame_a0b2e6a5bb3d51927a966557078c84eff} 
+void {\bfseries clear\+Event\+Hooks} (const std::\+string \&event\+Name)
+\item 
+\Hypertarget{classGame_a885ba88a07d33643d9bff69233f4ee9c}\label{classGame_a885ba88a07d33643d9bff69233f4ee9c} 
+void {\bfseries start\+Dialogue\+Tree} (const std::\+string \&dialogue\+Id)
+\item 
+\Hypertarget{classGame_a40dac6440dd8a46dae5816887c575f6f}\label{classGame_a40dac6440dd8a46dae5816887c575f6f} 
+void {\bfseries add\+Dialogue\+Option} (const std::\+string \&text, const std::\+string \&target\+Node)
+\item 
+\Hypertarget{classGame_a37cfddcefd1cc6dee275c46b90313956}\label{classGame_a37cfddcefd1cc6dee275c46b90313956} 
+void {\bfseries end\+Dialogue} ()
+\item 
+\Hypertarget{classGame_ae28995e5ac302717faa1a59277ea3e60}\label{classGame_ae28995e5ac302717faa1a59277ea3e60} 
+bool {\bfseries has\+Spoken\+To} (const std::\+string \&npc\+Id)
+\item 
+\Hypertarget{classGame_a04db3d9ed69e5377188d5a537d07dc70}\label{classGame_a04db3d9ed69e5377188d5a537d07dc70} 
+void {\bfseries print\+Colored} (const std::\+string \&text, int color)
+\item 
+\Hypertarget{classGame_aaf948b2efd1e605d8c7c37ff67751c9d}\label{classGame_aaf948b2efd1e605d8c7c37ff67751c9d} 
+void {\bfseries print\+Bold} (const std::\+string \&text)
+\item 
+\Hypertarget{classGame_ac365073b631c0d3e804649b16e522f64}\label{classGame_ac365073b631c0d3e804649b16e522f64} 
+void {\bfseries print\+Italic} (const std::\+string \&text)
+\item 
+\Hypertarget{classGame_a43a51eaa8b6fdb3dc6faa4d3417bad1e}\label{classGame_a43a51eaa8b6fdb3dc6faa4d3417bad1e} 
+void {\bfseries clear\+Screen} ()
+\item 
+\Hypertarget{classGame_acdef80efc0e3189cf8e8ba6f74c86be4}\label{classGame_acdef80efc0e3189cf8e8ba6f74c86be4} 
+void {\bfseries typewriter\+Effect} (const std::\+string \&text, int ms\+Per\+Char)
+\item 
+\Hypertarget{classGame_a01e68bf0777f2b966a6d3d62914206cd}\label{classGame_a01e68bf0777f2b966a6d3d62914206cd} 
+void {\bfseries play\+Audio} (const std::\+string \&filepath)
+\item 
+\Hypertarget{classGame_a3e590971a8ae03fe8e44d5b6c6527484}\label{classGame_a3e590971a8ae03fe8e44d5b6c6527484} 
+void {\bfseries stop\+Audio} ()
+\item 
+\Hypertarget{classGame_a11eb25db6760909e07b6d96c6021c4cd}\label{classGame_a11eb25db6760909e07b6d96c6021c4cd} 
+void {\bfseries set\+Audio\+Volume} (float volume)
+\item 
+\Hypertarget{classGame_a3573f777955cf90e06cb01a2b151c20a}\label{classGame_a3573f777955cf90e06cb01a2b151c20a} 
+void {\bfseries loop\+Audio} (const std::\+string \&filepath)
+\item 
+\Hypertarget{classGame_a1d02c89d1c3191fe4e721f00a6d4d61a}\label{classGame_a1d02c89d1c3191fe4e721f00a6d4d61a} 
+void {\bfseries shake\+Screen} (int intensity, int duration)
+\item 
+\Hypertarget{classGame_ad753d9670f256a8f909dde612c9e5bf3}\label{classGame_ad753d9670f256a8f909dde612c9e5bf3} 
+void {\bfseries flash\+Screen} (int color)
+\item 
+\Hypertarget{classGame_a029fe15e8ee49e529d9ba65920c15f98}\label{classGame_a029fe15e8ee49e529d9ba65920c15f98} 
+void {\bfseries save\+Game} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_ac73daf99ca0a0a54b82240d967b2f4a1}\label{classGame_ac73daf99ca0a0a54b82240d967b2f4a1} 
+void {\bfseries load\+Game} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_a9976a365fd6746881179711a7d84cd2c}\label{classGame_a9976a365fd6746881179711a7d84cd2c} 
+void {\bfseries delete\+Save} (const std::\+string \&slot\+Name)
+\item 
+\Hypertarget{classGame_aef93295e0a998ea0c6781ec41bd586df}\label{classGame_aef93295e0a998ea0c6781ec41bd586df} 
+\doxymbox{\hyperlink{structAction}{Action}} {\bfseries parse\+Input} (const std::\+string \&input)
+\item 
+\Hypertarget{classGame_a72053e3df6b2c7b1bb21575126f10a41}\label{classGame_a72053e3df6b2c7b1bb21575126f10a41} 
+void {\bfseries execute\+Action} (const \doxymbox{\hyperlink{structAction}{Action}} \&action)
+\item 
+\Hypertarget{classGame_a66445e93af5d3a0e7b97fc5e0fe3362a}\label{classGame_a66445e93af5d3a0e7b97fc5e0fe3362a} 
+void {\bfseries process\+Command} (const std::\+string \&input)
+\item 
+\Hypertarget{classGame_a6f3a33940524b6ba9d83f627ccb14bbf}\label{classGame_a6f3a33940524b6ba9d83f627ccb14bbf} 
+void {\bfseries init} ()
+\item 
+\Hypertarget{classGame_adf1634a2d0c22f30f7c57e72fd2831bc}\label{classGame_adf1634a2d0c22f30f7c57e72fd2831bc} 
+void {\bfseries tick} ()
+\item 
+\Hypertarget{classGame_aca3fc9bc4a82b57111ca672e23ba38a0}\label{classGame_aca3fc9bc4a82b57111ca672e23ba38a0} 
+bool {\bfseries is\+Finished} () const
+\item 
+\Hypertarget{classGame_a667408238ebf95d5aa6cbb6e9101b282}\label{classGame_a667408238ebf95d5aa6cbb6e9101b282} 
+void {\bfseries enter\+Real\+Time\+Mode} ()
+\item 
+\Hypertarget{classGame_a86acef113dd534f732bf69c4cdec1909}\label{classGame_a86acef113dd534f732bf69c4cdec1909} 
+void {\bfseries exit\+Real\+Time\+Mode} ()
+\item 
+\Hypertarget{classGame_ae6901bd7e0b914ae16ec1b2f9268fccd}\label{classGame_ae6901bd7e0b914ae16ec1b2f9268fccd} 
+void {\bfseries save} (const std::\+string \&filename)
+\item 
+\Hypertarget{classGame_a2e3cf07afa6f8c87bb4e18098ae9302d}\label{classGame_a2e3cf07afa6f8c87bb4e18098ae9302d} 
+void {\bfseries load} (const std::\+string \&filename)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGame_a144b041d472e733602e8035679dde3c8}\label{classGame_a144b041d472e733602e8035679dde3c8} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classRoom}{Room}} $>$ $>$ {\bfseries rooms}
+\item 
+\Hypertarget{classGame_a4cdd44f5b5a981c3d4f737ba84be0fdc}\label{classGame_a4cdd44f5b5a981c3d4f737ba84be0fdc} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classItemDef}{Item\+Def}} $>$ $>$ {\bfseries item\+Defs}
+\item 
+\Hypertarget{classGame_a4ca503f282a480a847e8b56c3eed0e01}\label{classGame_a4ca503f282a480a847e8b56c3eed0e01} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classItem}{Item}} $>$ $>$ {\bfseries items}
+\item 
+\Hypertarget{classGame_ad898edeb40b2c2a967c26329f2bd3433}\label{classGame_ad898edeb40b2c2a967c26329f2bd3433} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classDoor}{Door}} $>$ $>$ {\bfseries doors}
+\item 
+\Hypertarget{classGame_a40efff338f911d54a4769dcdf341cf4c}\label{classGame_a40efff338f911d54a4769dcdf341cf4c} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classNPC}{NPC}} $>$ $>$ {\bfseries npcs}
+\item 
+\Hypertarget{classGame_a2a2fce148a300ac7da3670ff5d1d6272}\label{classGame_a2a2fce148a300ac7da3670ff5d1d6272} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classStorage}{Storage}} $>$ $>$ {\bfseries storages}
+\item 
+\Hypertarget{classGame_a3bdfcd32f935281121a482d235981497}\label{classGame_a3bdfcd32f935281121a482d235981497} 
+std::\+map$<$ std::\+string, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classMiniGame}{Mini\+Game}} $>$ $>$ {\bfseries mini\+Games}
+\item 
+\Hypertarget{classGame_a083b728473cc71cfb5d29ae79299a15d}\label{classGame_a083b728473cc71cfb5d29ae79299a15d} 
+std::\+vector$<$ \doxymbox{\hyperlink{classItem}{Item}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries inventory}
+\item 
+\Hypertarget{classGame_a7b3dbb9bf22ca9aec656d43473dfb44f}\label{classGame_a7b3dbb9bf22ca9aec656d43473dfb44f} 
+\doxymbox{\hyperlink{classRoom}{Room}} \texorpdfstring{$\ast$}{*} {\bfseries current\+Room} = nullptr
+\item 
+\Hypertarget{classGame_af76b97a430a3f38585c93f3e71e0d3f3}\label{classGame_af76b97a430a3f38585c93f3e71e0d3f3} 
+std::\+map$<$ std::\+string, bool $>$ {\bfseries global\+Flags}
+\item 
+\Hypertarget{classGame_ac1912359281aa97267fa42f177c3ee47}\label{classGame_ac1912359281aa97267fa42f177c3ee47} 
+std::\+function$<$ bool(\doxymbox{\hyperlink{classGame}{Game}} \&)$>$ {\bfseries win\+Condition}
+\item 
+\Hypertarget{classGame_ad073b9c9bdc10238b4139056dfc70698}\label{classGame_ad073b9c9bdc10238b4139056dfc70698} 
+std::\+string {\bfseries active\+Dialogue\+Node}
+\item 
+\Hypertarget{classGame_a1d29b068342e1de8a3433b65e3dd87ca}\label{classGame_a1d29b068342e1de8a3433b65e3dd87ca} 
+std::\+vector$<$ \doxymbox{\hyperlink{structGame_1_1DialogueOption}{Dialogue\+Option}} $>$ {\bfseries current\+Dialogue\+Options}
+\item 
+\Hypertarget{classGame_a0794d1750d7cab016af386476362972d}\label{classGame_a0794d1750d7cab016af386476362972d} 
+bool {\bfseries in\+Dialogue} = false
+\item 
+\Hypertarget{classGame_adb424734b2454f9ed1e6d6bd44e6dfaf}\label{classGame_adb424734b2454f9ed1e6d6bd44e6dfaf} 
+bool {\bfseries is\+Running} = true
+\item 
+\Hypertarget{classGame_a0ce7130ec5033dbcdff3862effa262c5}\label{classGame_a0ce7130ec5033dbcdff3862effa262c5} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structGame_1_1VerbDef}{Verb\+Def}} $>$ {\bfseries verb\+Registry}
+\item 
+\Hypertarget{classGame_ae9706539f2e92fc8f32dcdd6c8dd8456}\label{classGame_ae9706539f2e92fc8f32dcdd6c8dd8456} 
+std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries verb\+Synonyms}
+\item 
+\Hypertarget{classGame_a87fe68a344eae93c78765927ca3a8faa}\label{classGame_a87fe68a344eae93c78765927ca3a8faa} 
+std::\+map$<$ std::\+string, Preposition $>$ {\bfseries prep\+Map}
+\item 
+\Hypertarget{classGame_a1bd20306ed5690110614560f551d1437}\label{classGame_a1bd20306ed5690110614560f551d1437} 
+std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries object\+Synonyms}
+\item 
+\Hypertarget{classGame_afce7e4e50bc485a2f78b2d671118b964}\label{classGame_afce7e4e50bc485a2f78b2d671118b964} 
+std::\+set$<$ std::\+string $>$ {\bfseries darkness\+Allowed\+Verbs}
+\item 
+\Hypertarget{classGame_a691dde99cbd1b3bf7fd8b068f18caf46}\label{classGame_a691dde99cbd1b3bf7fd8b068f18caf46} 
+std::\+map$<$ std::\+string, std::\+vector$<$ std::\+string $>$ $>$ {\bfseries responses}
+\item 
+\Hypertarget{classGame_aab4f8e1ae3133a3d389fb331a284b08b}\label{classGame_aab4f8e1ae3133a3d389fb331a284b08b} 
+std::\+map$<$ std::\+string, int $>$ {\bfseries last\+Response\+Idx}
+\item 
+\Hypertarget{classGame_aeda3b432d9fcf3c6b83dc4c27fecf5bf}\label{classGame_aeda3b432d9fcf3c6b83dc4c27fecf5bf} 
+\doxymbox{\hyperlink{classIOInterface}{IOInterface}} \texorpdfstring{$\ast$}{*} {\bfseries io}
+\item 
+\Hypertarget{classGame_a4f5fb6c2a5b2476d61e613d9d8fa8da7}\label{classGame_a4f5fb6c2a5b2476d61e613d9d8fa8da7} 
+Verbosity {\bfseries verbosity\+Mode} = BRIEF
+\item 
+\Hypertarget{classGame_afaf9404196df9968103d5b0d0ad08139}\label{classGame_afaf9404196df9968103d5b0d0ad08139} 
+int {\bfseries score} = 0
+\item 
+\Hypertarget{classGame_a57da54f78a460f88873be31fea8aee60}\label{classGame_a57da54f78a460f88873be31fea8aee60} 
+int {\bfseries max\+Score} = 0
+\item 
+\Hypertarget{classGame_aae3f29967035f1aa07b8b3e5b47d6fe4}\label{classGame_aae3f29967035f1aa07b8b3e5b47d6fe4} 
+int {\bfseries moves} = 0
+\item 
+\Hypertarget{classGame_abb751fdded1d21465f2ab3f3e986b4e0}\label{classGame_abb751fdded1d21465f2ab3f3e986b4e0} 
+std::\+string {\bfseries last\+Object}
+\item 
+\Hypertarget{classGame_ab33eca30470e1324c9a615743b98b339}\label{classGame_ab33eca30470e1324c9a615743b98b339} 
+std::\+string {\bfseries last\+NPC}
+\item 
+\Hypertarget{classGame_a875b5ae67933143d143c9032d2f683eb}\label{classGame_a875b5ae67933143d143c9032d2f683eb} 
+std::\+string {\bfseries last\+Plural}
+\item 
+\Hypertarget{classGame_adebdb5e5044fd2250fd0437714908af9}\label{classGame_adebdb5e5044fd2250fd0437714908af9} 
+std::\+string {\bfseries last\+Command}
+\item 
+\Hypertarget{classGame_a6b5cf534b694fc35768354fd36f64560}\label{classGame_a6b5cf534b694fc35768354fd36f64560} 
+std::\+string {\bfseries last\+Failed\+Command}
+\item 
+\Hypertarget{classGame_a7896793014ecae8f3f03fe023a058c81}\label{classGame_a7896793014ecae8f3f03fe023a058c81} 
+int {\bfseries first\+Unknown\+Word\+Index} = -\/1
+\item 
+\Hypertarget{classGame_a29265b7662f2fb0a22b805a54f04da77}\label{classGame_a29265b7662f2fb0a22b805a54f04da77} 
+std::\+string {\bfseries pending\+Disambiguation\+Target}
+\item 
+\Hypertarget{classGame_ac34a0431553673d5b6264a4be18e831b}\label{classGame_ac34a0431553673d5b6264a4be18e831b} 
+std::\+vector$<$ std::\+string $>$ {\bfseries pending\+Disambiguation\+Matches}
+\item 
+\Hypertarget{classGame_ad3246fbadeea8147d480fbd038a6e576}\label{classGame_ad3246fbadeea8147d480fbd038a6e576} 
+\doxymbox{\hyperlink{structAction}{Action}} {\bfseries pending\+Disambiguation\+Action}
+\item 
+\Hypertarget{classGame_aba3c5303ce958fb37c83210e5b9f3f52}\label{classGame_aba3c5303ce958fb37c83210e5b9f3f52} 
+std::\+string {\bfseries disambiguation\+Slot}
+\item 
+\Hypertarget{classGame_a86396d373d5a6eace011827ce800ebd5}\label{classGame_a86396d373d5a6eace011827ce800ebd5} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structGame_1_1TimerInfo}{Timer\+Info}} $>$ {\bfseries timers}
+\item 
+\Hypertarget{classGame_a9ae40bd3c043bfa0e20c4af4ddad25de}\label{classGame_a9ae40bd3c043bfa0e20c4af4ddad25de} 
+std::\+map$<$ std::\+string, std::\+vector$<$ std::\+function$<$ void()$>$ $>$ $>$ {\bfseries event\+Hooks}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+engine/\+Game.\+h\item 
+template/\+engine/\+Game.\+h\item 
+engine/\+Game.\+cpp\item 
+game/\+game.\+cpp\item 
+template/\+engine/\+Game.\+cpp\item 
+template/\+game/\+Game\+Setup.\+cpp\end{DoxyCompactItemize}

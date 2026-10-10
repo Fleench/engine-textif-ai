@@ -1,0 +1,74 @@
+\doxysection{engine Directory Reference}
+\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51}{}\label{dir_996f45160da62e1a3d7f6046fad68f51}\index{engine Directory Reference@{engine Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries Door.\+h}
+\item 
+file {\bfseries Game.\+h}
+\item 
+file {\bfseries Game\+Object.\+h}
+\item 
+file {\bfseries IOInterface.\+h}
+\item 
+file {\bfseries Item.\+h}
+\item 
+file {\bfseries Mini\+Game.\+h}
+\item 
+file {\bfseries Native\+IO.\+h}
+\item 
+file {\bfseries NPC.\+h}
+\item 
+file {\bfseries Parser.\+h}
+\item 
+file {\bfseries Room.\+h}
+\item 
+file {\bfseries Save\+Load.\+h}
+\item 
+file {\bfseries Web\+IO.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md0}{}\doxysubsection{\texorpdfstring{Engine Core (\`{}engine/\+\`{})}{Engine Core (\`{}engine/\+\`{})}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md0}
+This directory houses the foundational framework for the interactive fiction engine. It strictly contains {\bfseries{game-\/agnostic}} framework code and the I/\+O layer. {\bfseries{No demo content or specific game narrative resides here.}}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md1}{}\doxysubsection{\texorpdfstring{Purpose}{Purpose}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md1}
+The engine\textquotesingle{}s responsibility is to provide the systems, scaffolding, and interfaces upon which any text adventure can be built with exact truth and reliable behavior. Its features include:\+\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md2}{}\doxysubsubsection{\texorpdfstring{Advanced Parsing \& Disambiguation}{Advanced Parsing \& Disambiguation}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md2}
+
+\begin{DoxyItemize}
+\item {\bfseries{Command \doxylink{classParser}{Parser}}}:\+ Understands verbs, subjects, and parameters.
+\item {\bfseries{Pronoun Tracking}}:\+ Resolves referents contextually (e.\+g., {\ttfamily IT}, {\ttfamily HIM}, {\ttfamily HER}, {\ttfamily THEM}).
+\item {\bfseries{Command History}}:\+ Supports {\ttfamily AGAIN} (repeat last command) and {\ttfamily OOPS} (correct a typo in the last command).
+\item {\bfseries{Multi-\/\+Command Chaining}}:\+ Players can sequence commands using periods or semicolons (e.\+g., {\ttfamily TAKE LAMP. GO NORTH}).
+\item {\bfseries{Disambiguation Prompts}}:\+ When the player\textquotesingle{}s target is ambiguous, the parser prompts for clarification before executing.
+\end{DoxyItemize}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md3}{}\doxysubsubsection{\texorpdfstring{Verb Dispatch System}{Verb Dispatch System}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md3}
+
+\begin{DoxyItemize}
+\item {\bfseries{Verb Registry}}:\+ The engine utilizes a massive Part 3 Verb Dispatch Refactor. The {\ttfamily verb\+Registry} efficiently maps input strings to game actions.
+\item {\bfseries{Dynamic Capabilities}}:\+ Items and entities define what actions they support using {\ttfamily supports(name)} and {\ttfamily supports(name, func)}. This encapsulates logic within the object itself rather than a monolithic parser.
+\end{DoxyItemize}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md4}{}\doxysubsubsection{\texorpdfstring{Core Systems \& World Mechanics}{Core Systems \& World Mechanics}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md4}
+
+\begin{DoxyItemize}
+\item {\bfseries{State Management}}:\+ Tracks generic flags, rooms, items, NPCs, transitions, and inventories ({\ttfamily Game.\+h}).
+\item {\bfseries{Environmental Mechanics}}:\+
+\begin{DoxyItemize}
+\item {\bfseries{Darkness \& Lighting}}:\+ Rooms and items manage illumination states via {\ttfamily is\+Dark}, {\ttfamily is\+Light\+Source}, and {\ttfamily is\+Lit}.
+\item {\bfseries{Supporter Surfaces}}:\+ Objects can be placed on top of other objects using the {\ttfamily PUT X ON Y} mechanics.
+\end{DoxyItemize}
+\item {\bfseries{Player Metrics}}:\+ The engine tracks the player\textquotesingle{}s {\bfseries{Score}} and {\bfseries{Moves}}, displaying them continuously in a customizable {\bfseries{Status Bar}}.
+\end{DoxyItemize}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md5}{}\doxysubsubsection{\texorpdfstring{Narrative \& Feedback}{Narrative \& Feedback}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md5}
+
+\begin{DoxyItemize}
+\item {\bfseries{Verbosity Modes}}:\+ The engine supports {\ttfamily VERBOSE}, {\ttfamily BRIEF}, and {\ttfamily SUPERBRIEF} room description modes.
+\item {\bfseries{Narrator Response Variety}}:\+ Allows for custom responses instead of generic default fallbacks.
+\end{DoxyItemize}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md6}{}\doxysubsection{\texorpdfstring{The I/\+O Abstraction Layer}{The I/\+O Abstraction Layer}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md6}
+To support both synchronous native terminal execution and asynchronous web execution (via Web\+Assembly), the engine uses the {\ttfamily \doxylink{classIOInterface}{IOInterface}}:\+
+\begin{DoxyItemize}
+\item {\bfseries{{\ttfamily Native\+IO.\+h}}}:\+ Blocking {\ttfamily std::\+cin} and {\ttfamily std::\+cout} for standard native builds.
+\item {\bfseries{{\ttfamily Web\+IO.\+h}}}:\+ Asynchronous I/\+O tailored for Emscripten, capturing inputs without blocking the browser thread.
+\end{DoxyItemize}\hypertarget{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md7}{}\doxysubsection{\texorpdfstring{How it Ties Together}{How it Ties Together}}\label{dir_996f45160da62e1a3d7f6046fad68f51_autotoc_md7}
+The engine exposes these tools so that the {\ttfamily game/\+} module can confidently define content. The engine\textquotesingle{}s core bootstrapping process involves:\+
+\begin{DoxyEnumerate}
+\item Instantiating the appropriate {\ttfamily \doxylink{classIOInterface}{IOInterface}}.
+\item Providing that interface to the master {\ttfamily \doxylink{classGame}{Game}} state object.
+\item Supplying the lifecycle hooks ({\ttfamily init()}, {\ttfamily tick()}, {\ttfamily is\+Finished()}) which the game\textquotesingle{}s executable loop drives. 
+\end{DoxyEnumerate}

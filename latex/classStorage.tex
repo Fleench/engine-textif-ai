@@ -1,0 +1,119 @@
+\doxysection{Storage Class Reference}
+\hypertarget{classStorage}{}\label{classStorage}\index{Storage@{Storage}}
+Inheritance diagram for Storage:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classStorage}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classStorage_a4ce96839fd1e2e003a3df11c19adffac}\label{classStorage_a4ce96839fd1e2e003a3df11c19adffac} 
+{\bfseries Storage} (const std::\+string \&id, const \doxymbox{\hyperlink{classItemDef}{Item\+Def}} \texorpdfstring{$\ast$}{*}def)
+\item 
+\Hypertarget{classStorage_a4ce96839fd1e2e003a3df11c19adffac}\label{classStorage_a4ce96839fd1e2e003a3df11c19adffac} 
+{\bfseries Storage} (const std::\+string \&id, const \doxymbox{\hyperlink{classItemDef}{Item\+Def}} \texorpdfstring{$\ast$}{*}def)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classItem}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Item} (const std::\+string \&id, const \doxymbox{\hyperlink{classItemDef}{Item\+Def}} \texorpdfstring{$\ast$}{*}def)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\item 
+{\bfseries Item} (const std::\+string \&id, const \doxymbox{\hyperlink{classItemDef}{Item\+Def}} \texorpdfstring{$\ast$}{*}def)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries supports} (const std::\+string \&name)
+\item 
+void {\bfseries supports} (const std::\+string \&name, Verb\+Fn func)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&n)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Description} (const std::\+string \&desc)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Flag} (const std::\+string \&key, bool val=true)
+\item 
+void {\bfseries supports} (const std::\+string \&name)
+\item 
+void {\bfseries supports} (const std::\+string \&name, Verb\+Fn func)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&n)
+\item 
+{\bfseries Game\+Object} (const std::\+string \&i, const std::\+string \&n)
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Description} (const std::\+string \&desc)
+\item 
+std::\+string {\bfseries get\+Display\+Name} () const
+\item 
+std::\+string {\bfseries get\+Match\+Name} () const
+\item 
+\doxymbox{\hyperlink{classGameObject}{Game\+Object}} \& {\bfseries set\+Flag} (const std::\+string \&key, bool val=true)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classStorage_a30a01b485f6162b03afa5ac4bf5a0acf}\label{classStorage_a30a01b485f6162b03afa5ac4bf5a0acf} 
+std::\+vector$<$ \doxymbox{\hyperlink{classItem}{Item}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries items}
+\item 
+\Hypertarget{classStorage_a3d05391db82a97ccc2ae98a108f91ac1}\label{classStorage_a3d05391db82a97ccc2ae98a108f91ac1} 
+bool {\bfseries is\+Open} = false
+\item 
+\Hypertarget{classStorage_a5d6efd6735e3ffe9ad031125e69bf543}\label{classStorage_a5d6efd6735e3ffe9ad031125e69bf543} 
+bool {\bfseries is\+Supporter} = false
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \doxymbox{\hyperlink{classItem}{Item}}}
+\begin{DoxyCompactItemize}
+\item 
+const \doxymbox{\hyperlink{classItemDef}{Item\+Def}} \texorpdfstring{$\ast$}{*} {\bfseries def} = nullptr
+\item 
+int {\bfseries count} = 1
+\item 
+bool {\bfseries unique} = true
+\item 
+bool {\bfseries is\+Light\+Source} = false
+\item 
+bool {\bfseries is\+Lit} = false
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+std::\+map$<$ std::\+string, Verb\+Fn $>$ {\bfseries verbs}
+\item 
+std::\+string {\bfseries id}
+\item 
+std::\+string {\bfseries name}
+\item 
+std::\+string {\bfseries description}
+\item 
+std::\+map$<$ std::\+string, bool $>$ {\bfseries flags}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{classGameObject}{Game\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+using {\bfseries Verb\+Fn} = std::\+function$<$void(\doxymbox{\hyperlink{classGame}{Game}}\&, \doxymbox{\hyperlink{classGameObject}{Game\+Object}}\texorpdfstring{$\ast$}{*}, const \doxymbox{\hyperlink{structAction}{Action}}\&)$>$
+\item 
+using {\bfseries Verb\+Fn} = std::\+function$<$void(\doxymbox{\hyperlink{classGame}{Game}}\&, \doxymbox{\hyperlink{classGameObject}{Game\+Object}}\texorpdfstring{$\ast$}{*}, const \doxymbox{\hyperlink{structAction}{Action}}\&)$>$
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+engine/\+Item.\+h\item 
+template/\+engine/\+Item.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Text Adventure</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #101114;
+            --panel: #171a1f;
+            --panel-strong: #20252c;
+            --text: #d7f7da;
+            --muted: #8fa891;
+            --accent: #38f06f;
+            --warn: #ffd166;
+            --error: #ff5f6d;
+            --border: #2c3540;
+            --input: #0b0d10;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        #app {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            width: 100%;
+            height: 100%;
+            min-height: 100dvh;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.03) 50%),
+                var(--bg);
+            background-size: 100% 4px;
+        }
+
+        #status-bar {
+            min-height: 34px;
+            padding: 8px 14px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-strong);
+            color: var(--accent);
+            font-size: 14px;
+            line-height: 18px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #terminal {
+            min-height: 0;
+            overflow-y: auto;
+            padding: 16px clamp(12px, 3vw, 28px);
+            scroll-behavior: smooth;
+        }
+
+        #terminal-inner {
+            width: min(100%, 920px);
+            margin: 0 auto;
+        }
+
+        #loading,
+        #error-message {
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        #loading {
+            color: var(--warn);
+        }
+
+        #error-message {
+            display: none;
+            color: var(--error);
+            white-space: pre-wrap;
+        }
+
+        #output {
+            display: block;
+            min-height: 1rem;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            font-size: 16px;
+            line-height: 1.48;
+        }
+
+        .echo {
+            color: var(--muted);
+        }
+
+        #input-area {
+            margin: 0;
+            padding: 0;
+        }
+
+        #input-row {
+            display: flex;
+            align-items: baseline;
+            width: 100%;
+            min-height: 1.48em;
+            margin: 0;
+            gap: 8px;
+            font-size: 16px;
+            line-height: 1.48;
+        }
+
+        #prompt {
+            flex: 0 0 auto;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        #command-input {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 1.48em;
+            border: 0;
+            border-radius: 0;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            caret-color: var(--accent);
+            font: inherit;
+            padding: 0;
+        }
+
+        #command-input:focus {
+            box-shadow: none;
+        }
+
+        #command-input:disabled {
+            color: var(--muted);
+            cursor: wait;
+            opacity: 0.75;
+        }
+
+        #terminal::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #terminal::-webkit-scrollbar-track {
+            background: #0b0d10;
+        }
+
+        #terminal::-webkit-scrollbar-thumb {
+            border: 2px solid #0b0d10;
+            border-radius: 8px;
+            background: #43505d;
+        }
+
+        @media (max-width: 620px) {
+            #status-bar {
+                font-size: 13px;
+            }
+
+            #terminal {
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+
+            #output,
+            #command-input {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main id="app">
+        <div id="status-bar">Loading engine...</div>
+
+        <section id="terminal" aria-label="Game output">
+            <div id="terminal-inner">
+                <div id="loading">Loading Engine...</div>
+                <div id="error-message" role="alert"></div>
+                <div id="output" aria-live="polite" aria-atomic="false"></div>
+                <form id="input-area" autocomplete="off">
+                    <div id="input-row">
+                        <label id="prompt" for="command-input">&gt;</label>
+                        <input
+                            type="text"
+                            id="command-input"
+                            autocomplete="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            disabled
+                        >
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const outputElement = document.getElementById("output");
+        const inputElement = document.getElementById("command-input");
+        const inputForm = document.getElementById("input-area");
+        const terminalElement = document.getElementById("terminal");
+        const loadingElement = document.getElementById("loading");
+        const errorElement = document.getElementById("error-message");
+        const statusElement = document.getElementById("status-bar");
+        const promptElement = document.getElementById("prompt");
+
+        let savedScreenHTML = null;
+        let commandHistory = [];
+        let historyIndex = 0;
+        let pendingInputResolver = null;
+
+        window.inputQueue = [];
+        window.isRealtimeMode = false;
+
+        function scrollToBottom() {
+            terminalElement.scrollTop = terminalElement.scrollHeight;
+        }
+
+        function appendText(text, className) {
+            const span = document.createElement("span");
+            if (className) span.className = className;
+            span.textContent = text;
+            outputElement.appendChild(span);
+            scrollToBottom();
+        }
+
+        function stripTrailingPrompt(text) {
+            return text.replace(/(?:\r?\n)?>(?:\s*)$/, "");
+        }
+
+        function setError(message) {
+            loadingElement.style.display = "none";
+            errorElement.style.display = "block";
+            errorElement.textContent = message;
+            statusElement.textContent = "Engine failed";
+        }
+
+        function cleanAnsi(text) {
+            return text
+                .replace(/\x1b\[\?1049[hl]/g, "")
+                .replace(/\x1b\[2J/g, "")
+                .replace(/\x1b\[\d*(;\d+)*H/g, "");
+        }
+
+        window.clearOutput = function() {
+            outputElement.textContent = "";
+            scrollToBottom();
+        };
+
+        window.printMessage = function(text) {
+            text = String(text ?? "");
+
+            if (text.includes("\x1b[?1049h")) {
+                savedScreenHTML = outputElement.innerHTML;
+                outputElement.textContent = "";
+                text = text.replace(/\x1b\[\?1049h/g, "");
+            }
+
+            if (text.includes("\x1b[?1049l")) {
+                outputElement.innerHTML = savedScreenHTML ?? "";
+                savedScreenHTML = null;
+                text = text.replace(/\x1b\[\?1049l/g, "");
+            }
+
+            if (/\x1b\[2J|\x1b\[\d*(;\d+)*H/.test(text)) {
+                window.clearOutput();
+                text = cleanAnsi(text);
+            }
+
+            text = stripTrailingPrompt(text);
+
+            if (text.length > 0) appendText(text);
+        };
+
+        Object.defineProperty(window, "resolveInput", {
+            get() {
+                return pendingInputResolver;
+            },
+            set(resolver) {
+                pendingInputResolver = resolver;
+                flushRealtimeInput();
+            }
+        });
+
+        window.setRealtimeMode = function(enabled) {
+            window.isRealtimeMode = Boolean(enabled);
+            inputElement.value = "";
+            inputElement.placeholder = window.isRealtimeMode ? "Realtime mode" : "Type a command...";
+            promptElement.style.visibility = window.isRealtimeMode ? "hidden" : "visible";
+            inputElement.style.color = window.isRealtimeMode ? "transparent" : "";
+            inputElement.style.caretColor = window.isRealtimeMode ? "transparent" : "";
+            inputElement.setAttribute("aria-label", window.isRealtimeMode ? "Realtime keyboard capture" : "Command input");
+            inputElement.focus();
+            flushRealtimeInput();
+        };
+
+        function completePendingInput(value) {
+            if (typeof pendingInputResolver !== "function") return false;
+            const resolver = pendingInputResolver;
+            pendingInputResolver = null;
+            resolver(value);
+            return true;
+        }
+
+        function flushRealtimeInput() {
+            if (!window.isRealtimeMode || window.inputQueue.length === 0) return;
+            if (typeof pendingInputResolver === "function") {
+                completePendingInput(window.inputQueue.shift());
+            }
+        }
+
+        function queueRealtimeKey(event) {
+            if (event.repeat) return;
+            if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab", "Escape"].includes(event.key)) return;
+
+            event.preventDefault();
+            window.inputQueue.push(event.key);
+            flushRealtimeInput();
+        }
+
+        function submitCommand() {
+            const command = inputElement.value;
+            if (command.length > 0) {
+                commandHistory.push(command);
+                historyIndex = commandHistory.length;
+            }
+
+            inputElement.value = "";
+            appendText("> " + command + "\n", "echo");
+
+            if (/^\s*(quit|exit)\s*$/i.test(command)) {
+                inputElement.disabled = true;
+                statusElement.textContent = "Restarting...";
+                appendText("Restarting game...\n", "echo");
+                window.setTimeout(function() {
+                    window.location.reload();
+                }, 250);
+                return;
+            }
+
+            completePendingInput(command);
+        }
+
+        inputForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            if (window.isRealtimeMode || typeof pendingInputResolver !== "function") return;
+            submitCommand();
+        });
+
+        inputElement.addEventListener("keydown", function(event) {
+            if (window.isRealtimeMode) {
+                queueRealtimeKey(event);
+                return;
+            }
+
+            if (event.key === "ArrowUp") {
+                event.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex -= 1;
+                    inputElement.value = commandHistory[historyIndex] ?? "";
+                }
+            } else if (event.key === "ArrowDown") {
+                event.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex += 1;
+                    inputElement.value = commandHistory[historyIndex] ?? "";
+                } else {
+                    historyIndex = commandHistory.length;
+                    inputElement.value = "";
+                }
+            }
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (window.isRealtimeMode) {
+                if (event.target !== inputElement) queueRealtimeKey(event);
+                return;
+            }
+
+            if (event.target === document.body || event.target === terminalElement) {
+                inputElement.focus();
+            }
+        });
+
+        document.addEventListener("pointerdown", function() {
+            inputElement.focus();
+        });
+
+        var Module = {
+            locateFile: function(path) {
+                return path;
+            },
+            onRuntimeInitialized: function() {
+                loadingElement.style.display = "none";
+                inputElement.disabled = false;
+                inputElement.focus();
+                statusElement.textContent = "Ready";
+                scrollToBottom();
+            },
+            onAbort: function(what) {
+                setError("Engine initialization failed: " + what);
+            },
+            print: function(text) {
+                window.printMessage(String(text) + "\n");
+            },
+            printErr: function(text) {
+                console.error(text);
+                if (String(text).includes("failed") || String(text).includes("Aborted")) {
+                    statusElement.textContent = "Engine warning";
+                }
+            }
+        };
+
+        window.addEventListener("error", function(event) {
+            if (String(event.filename || "").includes("engine.js")) {
+                setError("Error: failed to load engine.js. Run this page from a local web server with engine.js and engine.wasm beside index.html.");
+            }
+        });
+    </script>
+
+    <script
+        async
+        src="engine.js"
+        onerror="document.getElementById('error-message').style.display='block'; document.getElementById('error-message').textContent='Error: failed to load engine.js or engine.wasm.'; document.getElementById('loading').style.display='none'; document.getElementById('status-bar').textContent='Engine failed';"
+    ></script>
+</body>
+</html>

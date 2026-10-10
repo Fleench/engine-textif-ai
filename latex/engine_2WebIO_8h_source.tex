@@ -1,0 +1,152 @@
+\doxysection{Web\+IO.\+h}
+\hypertarget{engine_2WebIO_8h_source}{}\label{engine_2WebIO_8h_source}\index{engine/WebIO.h@{engine/WebIO.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ WEBIO\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ WEBIO\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}IOInterface.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <emscripten.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}*\ requestInputAsync();}
+\DoxyCodeLine{00011\ \}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classWebIO}{WebIO}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classIOInterface}{IOInterface}}\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{bool}\ isRealtime\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ print(\textcolor{keyword}{const}\ std::string\&\ msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ std::string\ outMsg\ =\ msg;}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ clearScreen\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pos\ =\ 0;}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Strip\ out\ \(\backslash\)033[2J}}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((pos\ =\ outMsg.find(\textcolor{stringliteral}{"{}\(\backslash\)033[2J"{}}))\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ clearScreen\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ outMsg.erase(pos,\ 4);}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Strip\ out\ \(\backslash\)033[1;1H}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((pos\ =\ outMsg.find(\textcolor{stringliteral}{"{}\(\backslash\)033[1;1H"{}}))\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ clearScreen\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ outMsg.erase(pos,\ 6);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Strip\ out\ \(\backslash\)033[H\ (sometimes\ used\ instead\ of\ 1;1H)}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((pos\ =\ outMsg.find(\textcolor{stringliteral}{"{}\(\backslash\)033[H"{}}))\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ clearScreen\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ outMsg.erase(pos,\ 3);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (clearScreen)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ EM\_ASM(}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ outputDiv\ =\ document.getElementById(\textcolor{stringliteral}{'output'});}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (outputDiv)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outputDiv.innerHTML\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (typeof\ window.clearOutput\ ===\ \textcolor{stringliteral}{'function'})\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window.clearOutput();}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outMsg.empty())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ EM\_ASM\_(\{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (typeof\ window.printMessage\ ===\ \textcolor{stringliteral}{'function'})\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window.printMessage(UTF8ToString(\$0));}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console.log(UTF8ToString(\$0));}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \},\ outMsg.c\_str());}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ std::string\ requestInput()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isRealtime)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Non-\/blocking\ in\ realtime\ mode:\ pop\ from\ JS\ queue\ instantly}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ c\ =\ getCharAsync();}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ !=\ 0)\ \textcolor{keywordflow}{return}\ std::string(1,\ c);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Blocking\ async\ for\ normal\ turn-\/based\ input}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*\ result\ =\ requestInputAsync();}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!result)\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ std::string\ str(result);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ free(result);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str;}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ enterRawMode()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ isRealtime\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ EM\_ASM(\{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (typeof\ window.setRealtimeMode\ ===\ \textcolor{stringliteral}{'function'})\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window.setRealtimeMode(\textcolor{keyword}{true});}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ exitRawMode()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ isRealtime\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ EM\_ASM(\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (typeof\ window.setRealtimeMode\ ===\ \textcolor{stringliteral}{'function'})\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window.setRealtimeMode(\textcolor{keyword}{false});}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{bool}\ kbhit()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ EM\_ASM\_INT(\{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (window.inputQueue\ \&\&\ window.inputQueue.length\ >\ 0)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{char}\ getCharAsync()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ sleepFrame(10);\ \textcolor{comment}{//\ Automatically\ yield\ to\ browser\ to\ prevent\ tight-\/loop\ freezes}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!kbhit())\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ EM\_ASM\_INT(\{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (window.inputQueue\ \&\&\ window.inputQueue.length\ >\ 0)\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ key\ =\ window.inputQueue.shift();}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.length\ ===\ 1)\ \textcolor{keywordflow}{return}\ key.charCodeAt(0);}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}ArrowUp"{}})\ \textcolor{keywordflow}{return}\ 119;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}ArrowDown"{}})\ \textcolor{keywordflow}{return}\ 115;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}ArrowLeft"{}})\ \textcolor{keywordflow}{return}\ 97;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}ArrowRight"{}})\ \textcolor{keywordflow}{return}\ 100;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}Enter"{}})\ \textcolor{keywordflow}{return}\ 10;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ===\ \textcolor{stringliteral}{"{}\ "{}}\ ||\ key\ ===\ \textcolor{stringliteral}{"{}Space"{}})\ \textcolor{keywordflow}{return}\ 32;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ enterAltScreen()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}\(\backslash\)033[?1049h"{}});}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{void}\ exitAltScreen()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}\(\backslash\)033[?1049l"{}});}
+\DoxyCodeLine{00125\ \ \ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{void}\ sleepFrame(\textcolor{keywordtype}{int}\ ms)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ emscripten\_sleep(ms);}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{void}\ setStatus(\textcolor{keyword}{const}\ std::string\&\ status)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ EM\_ASM\_(\{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ var\ el\ =\ document.getElementById(\textcolor{stringliteral}{'status-\/bar'});}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (el)\ \{\ el.innerText\ =\ UTF8ToString(\$0);\ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (typeof\ window.printMessage\ ===\ \textcolor{stringliteral}{'function'})\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window.printMessage(\textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ +\ UTF8ToString(\$0));}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ console.log(\textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ +\ UTF8ToString(\$0));}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \},\ status.c\_str());}
+\DoxyCodeLine{00143\ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,23 @@
+\doxysection{Save\+Load.\+h}
+\hypertarget{template_2engine_2SaveLoad_8h_source}{}\label{template_2engine_2SaveLoad_8h_source}\index{template/engine/SaveLoad.h@{template/engine/SaveLoad.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ SAVELOAD\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ SAVELOAD\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classGame}{Game}};}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classSaveLoad}{SaveLoad}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ save(Game\&\ game,\ \textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ load(Game\&\ game,\ \textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ saveGame(Game\&\ game,\ \textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ loadGame(Game\&\ game,\ \textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ deleteSave(Game\&\ game,\ \textcolor{keyword}{const}\ std::string\&\ slotName);}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
