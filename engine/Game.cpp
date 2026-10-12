@@ -1,10 +1,10 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#include "../engine/Game.h"
-#include "../engine/Room.h"
-#include "../engine/Item.h"
-#include "../engine/Door.h"
-#include "../engine/MiniGame.h"
-#include "../engine/NPC.h"
+#include "Game.h"
+#include "Room.h"
+#include "Item.h"
+#include "Door.h"
+#include "MiniGame.h"
+#include "NPC.h"
 
 #include <stdexcept>
 #include <cstdio>
@@ -214,6 +214,27 @@ Action Game::parseInput(const std::string& input) {
     }
 
     return act;
+}
+
+void Game::setHelpEnabled(bool enabled) {
+    helpEnabled = enabled;
+}
+
+bool Game::isHelpEnabled() const {
+    return helpEnabled;
+}
+
+void Game::registerVerb(const std::string& name, const std::string& defaultMsg) {
+    VerbDef def;
+    def.needsArg = false;
+    def.helpText = "";
+    def.defaultFn = [this, defaultMsg](Game& game, const Action& action) {
+        DummyCout(this->io) << "\n" << defaultMsg << "\n";
+    };
+    verbRegistry[name] = def;
+    if (!verbSynonyms.count(name)) {
+        verbSynonyms[name] = name;
+    }
 }
 
 void Game::registerDefaultVerbs() {
@@ -759,10 +780,18 @@ void Game::registerDefaultVerbs() {
     }, false, "" };
 
     verbRegistry["help"] = { [this](Game& game, const Action& action) {
-
-            cout << "\nAvailable verbs: look, go, take, drop, open, close, use, play, talk, sleep, wake, put, inventory, save, load, quit, help.\n"
-                      << "Synonyms: x, examine, read, leave, enter, get, grab, walk, move, etc.\n";
-            
+        if (!helpEnabled) {
+            DummyCout(this->io) << "\nI don't understand that command.\n";
+            return;
+        }
+        DummyCout(this->io) << "\nAvailable verbs: ";
+        bool first = true;
+        for (const auto& pair : verbRegistry) {
+            if (!first) DummyCout(this->io) << ", ";
+            DummyCout(this->io) << pair.first;
+            first = false;
+        }
+        DummyCout(this->io) << ".\n";
     }, false, "" };
 
     verbRegistry["verbose"] = { [this](Game& game, const Action& action) {

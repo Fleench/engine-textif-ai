@@ -9,7 +9,7 @@ TARGET_WASM = engine.js
 
 SRCS = engine/main.cpp engine/GameObject.cpp engine/Item.cpp engine/Door.cpp engine/Room.cpp engine/NPC.cpp engine/MiniGame.cpp engine/Game.cpp engine/WebIO.cpp game/game.cpp
 
-.PHONY: all build wasm clean run debug
+.PHONY: all build wasm clean run debug test
 
 all: build
 
@@ -22,6 +22,14 @@ build: $(TARGET_NATIVE)
 $(TARGET_NATIVE): $(SRCS)
 	@echo "Building native binary..."
 	$(CXX) $(CXXFLAGS) -o $(TARGET_NATIVE) $(SRCS)
+
+test: build
+	@echo "Compiling and running parser feature verification tests..."
+	@mkdir -p tests
+	$(CXX) $(CXXFLAGS) -o tests/test_parser_verification tests/test_parser_verification.cpp engine/GameObject.cpp engine/Item.cpp engine/Door.cpp engine/Room.cpp engine/NPC.cpp engine/MiniGame.cpp engine/Game.cpp engine/WebIO.cpp game/game.cpp
+	./tests/test_parser_verification
+	@echo "Running regression tests..."
+	python3 test_script.py
 
 wasm: $(TARGET_WASM)
 
@@ -42,4 +50,5 @@ run: build
 
 clean:
 	@echo "Cleaning up..."
-	rm -f $(TARGET_NATIVE) engine.wasm engine.js
+	rm -f $(TARGET_NATIVE) engine.wasm engine.js tests/test_parser_verification
+

@@ -195,6 +195,9 @@ std::string playLockpicking(Game& game) {
 
 void Game::init() {
     Game& game = *this;
+    this->registerVerb("call", "no phone nearby");
+    this->registerVerb("turn on", "You can't turn that on.");
+    this->registerVerb("turn off", "You can't turn that off.");
     game.addResponse("cant_go", {"You bumped into a wall.", "Path's blocked.", "Nowhere to go that way."});
     game.addResponse("dont_see", {"You don't see that here.", "Invisible or missing.", "Not here!"});
     game.setMaxScore(8);
@@ -258,30 +261,30 @@ void Game::init() {
 
     this->itemDefs["grill"] = make_unique<ItemDef>("grill", "A hot grill for flipping burgers.");
     this->items["grill"] = make_unique<Item>("grill", this->itemDefs["grill"].get());
-    this->items["grill"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["burgerFlipper"]->run(g); });
+    this->items["grill"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["burgerFlipper"]->run(g); });
 
     this->itemDefs["machine"] = make_unique<ItemDef>("machine", "A flappy bird arcade machine.");
     this->items["machine"] = make_unique<Item>("machine", this->itemDefs["machine"].get());
-    this->items["machine"]->supports("take", [this](Game& g, GameObject*, const Action& a) { Game& game = *this;
+    this->items["machine"]->supports(*this, "take", [this](Game& g, GameObject*, const Action& a) { Game& game = *this;
         game.io->print("The arcade machine is bolted to the floor!\n");
     });
-    this->items["machine"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["flappyBird"]->run(g); });
+    this->items["machine"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["flappyBird"]->run(g); });
 
     this->itemDefs["book"] = make_unique<ItemDef>("book", "A scary math textbook.");
     this->items["book"] = make_unique<Item>("book", this->itemDefs["book"].get());
-    this->items["book"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["mathQuiz"]->run(g); });
+    this->items["book"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["mathQuiz"]->run(g); });
 
     this->itemDefs["screen"] = make_unique<ItemDef>("screen", "A reflex-testing screen.");
     this->items["screen"] = make_unique<Item>("screen", this->itemDefs["screen"].get());
-    this->items["screen"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["reactionTest"]->run(g); });
+    this->items["screen"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["reactionTest"]->run(g); });
 
     this->itemDefs["keyboard"] = make_unique<ItemDef>("keyboard", "A mechanical keyboard.");
     this->items["keyboard"] = make_unique<Item>("keyboard", this->itemDefs["keyboard"].get());
-    this->items["keyboard"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["typingTest"]->run(g); });
+    this->items["keyboard"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["typingTest"]->run(g); });
 
     this->itemDefs["phone"] = make_unique<ItemDef>("phone", "A smartphone with a cracked screen.");
     this->items["phone"] = make_unique<Item>("phone", this->itemDefs["phone"].get());
-    this->items["phone"]->supports("call", [this](Game& g, GameObject*, const Action& a) { Game& game = *this;
+    this->items["phone"]->supports(*this, "call", [this](Game& g, GameObject*, const Action& a) { Game& game = *this;
         string arg = a.object; // fallback or something
         game.io->print("Calling " + (arg.empty() ? "nobody" : arg) + "... no answer.\n");
     });
@@ -312,7 +315,7 @@ void Game::init() {
     this->npcs["alchemist"]->isAlive = true;
     this->itemDefs["talk_alchemist"] = make_unique<ItemDef>("talk_alchemist", "Talk to the alchemist.");
     this->items["talk_alchemist"] = make_unique<Item>("talk_alchemist", this->itemDefs["talk_alchemist"].get());
-    this->items["talk_alchemist"]->supports("talk", [](Game& g, GameObject*, const Action& a) {
+    this->items["talk_alchemist"]->supports(*this, "talk", [](Game& g, GameObject*, const Action& a) {
         g.startDialogueTree("alchemist_tree");
         g.addDialogueOption("What are you brewing?", "node_brew");
         g.addDialogueOption("Goodbye", "node_exit");
@@ -323,7 +326,7 @@ void Game::init() {
     this->npcs["blacksmith"]->health = 200;
     this->itemDefs["talk_blacksmith"] = make_unique<ItemDef>("talk_blacksmith", "Talk to the blacksmith.");
     this->items["talk_blacksmith"] = make_unique<Item>("talk_blacksmith", this->itemDefs["talk_blacksmith"].get());
-    this->items["talk_blacksmith"]->supports("talk", [](Game& g, GameObject*, const Action& a) {
+    this->items["talk_blacksmith"]->supports(*this, "talk", [](Game& g, GameObject*, const Action& a) {
         if (!g.getFlag("met_blacksmith")) {
             g.setFlag("met_blacksmith", true);
             g.startDialogueTree("blacksmith_intro");
@@ -338,7 +341,7 @@ void Game::init() {
     this->npcs["mystic"] = make_unique<NPC>("Mystic");
     this->itemDefs["talk_mystic"] = make_unique<ItemDef>("talk_mystic", "Talk to the mystic.");
     this->items["talk_mystic"] = make_unique<Item>("talk_mystic", this->itemDefs["talk_mystic"].get());
-    this->items["talk_mystic"]->supports("talk", [](Game& g, GameObject*, const Action& a) {
+    this->items["talk_mystic"]->supports(*this, "talk", [](Game& g, GameObject*, const Action& a) {
         g.startDialogueTree("mystic_tree");
         g.addDialogueOption("Tell my future", "node_future");
         g.endDialogue();
@@ -347,7 +350,7 @@ void Game::init() {
     this->npcs["bartender"] = make_unique<NPC>("Bartender");
     this->itemDefs["talk_bartender"] = make_unique<ItemDef>("talk_bartender", "Talk to the bartender.");
     this->items["talk_bartender"] = make_unique<Item>("talk_bartender", this->itemDefs["talk_bartender"].get());
-    this->items["talk_bartender"]->supports("talk", [](Game& g, GameObject*, const Action& a) {
+    this->items["talk_bartender"]->supports(*this, "talk", [](Game& g, GameObject*, const Action& a) {
         g.startDialogueTree("bartender_tree");
         g.addDialogueOption("Give me a drink", "node_drink");
         g.endDialogue();
@@ -360,7 +363,7 @@ void Game::init() {
     // Item to interact and use QOL functions
     this->itemDefs["qol_tester"] = make_unique<ItemDef>("qol_tester", "A device testing the fabric of reality.");
     this->items["qol_tester"] = make_unique<Item>("qol_tester", this->itemDefs["qol_tester"].get());
-    this->items["qol_tester"]->supports("use", [](Game& g, GameObject*, const Action& a) {
+    this->items["qol_tester"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) {
         g.setFlag("test_flag", true);
         g.getFlag("test_flag");
         g.giveItemToPlayer("qol_tester");
@@ -396,11 +399,11 @@ void Game::init() {
 
     this->itemDefs["anvil"] = make_unique<ItemDef>("anvil", "An anvil for sharpening.");
     this->items["anvil"] = make_unique<Item>("anvil", this->itemDefs["anvil"].get());
-    this->items["anvil"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["swordSharpening"]->run(g); });
+    this->items["anvil"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["swordSharpening"]->run(g); });
 
     this->itemDefs["locked_chest"] = make_unique<ItemDef>("locked_chest", "A chest to pick.");
     this->items["locked_chest"] = make_unique<Item>("locked_chest", this->itemDefs["locked_chest"].get());
-    this->items["locked_chest"]->supports("use", [](Game& g, GameObject*, const Action& a) { g.miniGames["lockpicking"]->run(g); });
+    this->items["locked_chest"]->supports(*this, "use", [](Game& g, GameObject*, const Action& a) { g.miniGames["lockpicking"]->run(g); });
 
     // --- Phase 2: Wiring ---
     this->rooms["Central Atrium"]->addExit("north", this->rooms["Food Court - Pizza"].get());
@@ -439,12 +442,12 @@ void Game::init() {
     this->itemDefs["lantern"] = make_unique<ItemDef>("lantern", "A bright lantern.");
     this->items["lantern"] = make_unique<Item>("lantern", this->itemDefs["lantern"].get());
     this->items["lantern"]->isLightSource = true;
-    this->items["lantern"]->supports("turn on", [](Game& g, GameObject* obj, const Action& a) {
+    this->items["lantern"]->supports(*this, "turn on", [](Game& g, GameObject* obj, const Action& a) {
         Item* lantern = static_cast<Item*>(obj);
         lantern->isLit = true;
         g.io->print("You turn on the lantern.\n");
     });
-    this->items["lantern"]->supports("turn off", [](Game& g, GameObject* obj, const Action& a) {
+    this->items["lantern"]->supports(*this, "turn off", [](Game& g, GameObject* obj, const Action& a) {
         Item* lantern = static_cast<Item*>(obj);
         lantern->isLit = false;
         g.io->print("You turn off the lantern.\n");

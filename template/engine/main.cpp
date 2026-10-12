@@ -1,4 +1,4 @@
-#include "../game/GameSetup.h"
+#include "Game.h"
 #include <cstdlib>
 
 #ifdef __EMSCRIPTEN__

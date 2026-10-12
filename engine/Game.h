@@ -51,6 +51,10 @@ public:
     };
     std::map<std::string, VerbDef> verbRegistry;
     std::map<std::string, std::string> verbSynonyms;
+    bool helpEnabled = true;
+    void setHelpEnabled(bool enabled);
+    bool isHelpEnabled() const;
+    void registerVerb(const std::string& name, const std::string& defaultMsg);
     void registerDefaultVerbs();
     void overrideVerbDefault(const std::string& verbName, std::function<void(Game&, const Action&)> fn);
     

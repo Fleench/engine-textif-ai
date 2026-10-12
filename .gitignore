@@ -5,3 +5,4 @@ __pycache__/
 *.o
 .TRASH/
 .trash/
+tests/test_parser_verification

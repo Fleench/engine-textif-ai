@@ -42,6 +42,7 @@ def test_game():
         run_cmd(child, 'examine phone', 'A smartphone with a cracked screen.')
         run_cmd(child, 'take it', 'Taken.')
         run_cmd(child, 'inventory', 'phone')
+        run_cmd(child, 'call phone', 'Calling phone... no answer.')
 
         # To Burgers
         run_cmd(child, 'go south', 'Food Court - Burgers')
@@ -94,6 +95,16 @@ def test_game():
         run_cmd(child, 'go south', 'Central Atrium') 
         run_cmd(child, 'go up', 'Potion Shop') 
         run_cmd(child, 'put phone on alchemist_desk', 'You put') 
+
+        # Test Dynamic Help Output
+        run_cmd(child, 'help', 'Available verbs:')
+        run_cmd(child, 'help', 'call')
+        run_cmd(child, 'help', 'turn on')
+        run_cmd(child, 'help', 'turn off')
+
+        # Test Call fallback when no phone is nearby
+        run_cmd(child, 'go down', 'Central Atrium')
+        run_cmd(child, 'call', 'no phone nearby') 
 
     except pexpect.EOF:
         failures.append("--- EOF EXCEPTION ---")

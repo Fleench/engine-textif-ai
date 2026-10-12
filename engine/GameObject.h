@@ -14,8 +14,8 @@ public:
     using VerbFn = std::function<void(Game&, GameObject*, const Action&)>;
     std::map<std::string, VerbFn> verbs;
 
-    void supports(const std::string& name);
-    void supports(const std::string& name, VerbFn func);
+    void supports(Game& game, const std::string& name);
+    void supports(Game& game, const std::string& name, VerbFn func);
 
     std::string id;
     std::string name;
