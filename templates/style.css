@@ -1,0 +1,555 @@
+/**
+ * ==============================================================================
+ * FICTIVE-AI UNIVERSAL TERMINAL THEME
+ * Blessed Fra Angelico — Sacred Aesthetics & Harmonious Illumination
+ * ==============================================================================
+ * Universal CSS stylesheet for WebAssembly (WASM) and Desktop Webview windows.
+ * Built for contemplation, clarity, retro CRT elegance, and responsive beauty.
+ */
+
+/* ------------------------------------------------------------------------------
+ * 1. DESIGN TOKENS & CSS CUSTOM PROPERTIES
+ * ------------------------------------------------------------------------------ */
+:root {
+    color-scheme: dark;
+
+    /* Core Canvas & Surface Geometry */
+    --bg-color: #0b0e14;
+    --bg-surface: #111622;
+    --bg-surface-elevated: #161d2d;
+    --border-color: #1e293b;
+    --border-subtle: #172033;
+    --selection-bg: rgba(56, 189, 248, 0.28);
+    --selection-text: #ffffff;
+
+    /* Primary Typography & Radiant Prompt */
+    --text-color: #e2e8f0;
+    --text-muted: #8492a6;
+    --text-dimmed: #526075;
+    --prompt-color: #38bdf8;
+    --prompt-glow: rgba(56, 189, 248, 0.45);
+    --cursor-color: #38bdf8;
+
+    /* Standard ANSI Palette */
+    --color-black: #181c24;
+    --color-red: #ef4444;
+    --color-green: #22c55e;
+    --color-yellow: #eab308;
+    --color-blue: #3b82f6;
+    --color-magenta: #a855f7;
+    --color-cyan: #06b6d4;
+    --color-white: #f8fafc;
+
+    /* High-Vibrance Bright ANSI Palette */
+    --color-bright-black: #64748b;
+    --color-gray: #94a3b8;
+    --color-bright-red: #f87171;
+    --color-bright-green: #4ade80;
+    --color-bright-yellow: #fde047;
+    --color-bright-blue: #60a5fa;
+    --color-bright-magenta: #d8b4fe;
+    --color-bright-cyan: #67e8f9;
+    --color-bright-white: #ffffff;
+
+    /* Atmospheric & Diagnostic Accents */
+    --accent-gold: #fbbf24;
+    --accent-emerald: #34d399;
+    --accent-rose: #fb7185;
+    --debug-color: #a78bfa;
+    --debug-bg: rgba(167, 139, 250, 0.12);
+    --echo-color: #94a3b8;
+
+    /* Typography Specifications */
+    --font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono",
+                   "Roboto Mono", "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
+    --font-size: 16px;
+    --line-height: 1.6;
+
+    /* Terminal Metrics */
+    --terminal-max-width: 960px;
+    --terminal-padding-x: clamp(14px, 3.5vw, 36px);
+    --terminal-padding-y: clamp(16px, 2.8vw, 28px);
+    --header-height: 44px;
+    --status-dot-size: 8px;
+
+    /* CRT Atmospheric Filter Parameters */
+    --crt-scanline-color: rgba(0, 0, 0, 0.32);
+    --crt-scanline-size: 3px;
+    --crt-phosphor-glow: 0 0 7px rgba(56, 189, 248, 0.35);
+    --crt-vignette: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+/* ------------------------------------------------------------------------------
+ * 2. GLOBAL RESET & BASE CANVAS
+ * ------------------------------------------------------------------------------ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+    user-select: text;
+}
+
+::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-text);
+}
+
+/* ------------------------------------------------------------------------------
+ * 3. APPLICATION SHELL & LAYOUT STRUCTURE
+ * ------------------------------------------------------------------------------ */
+#app-shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    background-color: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Top App / Webview Header Bar */
+#header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height);
+    min-height: var(--header-height);
+    padding: 0 var(--terminal-padding-x);
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+    user-select: none;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-color);
+}
+
+.brand-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--prompt-color);
+}
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.status-dot {
+    width: var(--status-dot-size);
+    height: var(--status-dot-size);
+    border-radius: 50%;
+    background-color: var(--color-bright-green);
+    box-shadow: 0 0 6px var(--color-bright-green);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-dot.connecting {
+    background-color: var(--color-bright-yellow);
+    box-shadow: 0 0 6px var(--color-bright-yellow);
+}
+
+.status-dot.error {
+    background-color: var(--color-bright-red);
+    box-shadow: 0 0 6px var(--color-bright-red);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-ctrl {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.btn-ctrl:hover {
+    color: var(--text-color);
+    border-color: var(--prompt-color);
+}
+
+.btn-ctrl.active {
+    color: var(--prompt-color);
+    border-color: var(--prompt-color);
+    background: rgba(56, 189, 248, 0.12);
+}
+
+/* ------------------------------------------------------------------------------
+ * 4. TERMINAL CONTAINER & TEXT SCROLLPORT
+ * ------------------------------------------------------------------------------ */
+#terminal-scrollport {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: var(--terminal-padding-y) var(--terminal-padding-x);
+    position: relative;
+    cursor: text;
+}
+
+#terminal-viewport {
+    width: min(100%, var(--terminal-max-width));
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* Output Buffer Element */
+#output-buffer {
+    flex: 1 0 auto;
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    margin-bottom: 8px;
+}
+
+/* Output Buffer Child Lines */
+.terminal-line {
+    display: block;
+    min-height: 1.25em;
+}
+
+.echo-command {
+    color: var(--echo-color);
+    opacity: 0.9;
+    margin: 4px 0 8px 0;
+}
+
+.echo-command .prompt-symbol {
+    color: var(--prompt-color);
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+/* ------------------------------------------------------------------------------
+ * 5. COMMAND INPUT ROW & INTERACTIVE PROMPT
+ * ------------------------------------------------------------------------------ */
+#input-container {
+    flex: 0 0 auto;
+    margin-top: 4px;
+    padding-bottom: 12px;
+}
+
+#command-form {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+    gap: 10px;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+}
+
+.prompt-label {
+    flex: 0 0 auto;
+    color: var(--prompt-color);
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--prompt-glow);
+    user-select: none;
+    font-size: 1.1em;
+}
+
+.input-wrapper {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+#command-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    caret-color: var(--cursor-color);
+    padding: 0;
+    margin: 0;
+}
+
+#command-input:disabled {
+    color: var(--text-dimmed);
+    cursor: wait;
+}
+
+/* Optional Custom Blinking Cursor */
+.terminal-cursor {
+    display: inline-block;
+    width: 9px;
+    height: 1.25em;
+    background-color: var(--cursor-color);
+    box-shadow: 0 0 8px var(--prompt-glow);
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    animation: cursor-blink 1.05s infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 49% {
+        opacity: 1;
+        visibility: visible;
+    }
+    50%, 100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* ------------------------------------------------------------------------------
+ * 6. STREAM MANIPULATOR STYLE CLASSES (io.hpp Compatibility)
+ * ------------------------------------------------------------------------------ */
+/* Text Attributes */
+.style-reset {
+    color: var(--text-color);
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    opacity: 1;
+}
+
+.style-bold {
+    font-weight: 700;
+}
+
+.style-dim {
+    opacity: 0.65;
+}
+
+.style-italic {
+    font-style: italic;
+}
+
+.style-underline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Standard ANSI Colors */
+.style-black   { color: var(--color-black); }
+.style-red     { color: var(--color-red); }
+.style-green   { color: var(--color-green); }
+.style-yellow  { color: var(--color-yellow); }
+.style-blue    { color: var(--color-blue); }
+.style-magenta { color: var(--color-magenta); }
+.style-cyan    { color: var(--color-cyan); }
+.style-white   { color: var(--color-white); }
+
+/* High-Vibrance Bright ANSI Colors (both camelCase and kebab-case) */
+.style-brightBlack,
+.style-bright-black { color: var(--color-bright-black); }
+
+.style-gray,
+.style-grey        { color: var(--color-gray); }
+
+.style-brightRed,
+.style-bright-red     { color: var(--color-bright-red); }
+
+.style-brightGreen,
+.style-bright-green   { color: var(--color-bright-green); }
+
+.style-brightYellow,
+.style-bright-yellow  { color: var(--color-bright-yellow); }
+
+.style-brightBlue,
+.style-bright-blue    { color: var(--color-bright-blue); }
+
+.style-brightMagenta,
+.style-bright-magenta { color: var(--color-bright-magenta); }
+
+.style-brightCyan,
+.style-bright-cyan    { color: var(--color-bright-cyan); }
+
+.style-brightWhite,
+.style-bright-white   { color: var(--color-bright-white); }
+
+/* Dev & Diagnostic Streams */
+.style-debug {
+    color: var(--debug-color);
+    background-color: var(--debug-bg);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+/* ------------------------------------------------------------------------------
+ * 7. RETRO CRT ATMOSPHERIC EFFECTS (Toggle via .crt class)
+ * ------------------------------------------------------------------------------ */
+.crt-overlay {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+}
+
+body.crt .crt-overlay {
+    display: block;
+    background:
+        linear-gradient(var(--crt-scanline-color) 50%, transparent 50%),
+        var(--crt-vignette);
+    background-size: 100% var(--crt-scanline-size), 100% 100%;
+    opacity: 0.85;
+}
+
+body.crt #output-buffer,
+body.crt .prompt-label,
+body.crt #command-input {
+    text-shadow: var(--crt-phosphor-glow);
+}
+
+body.crt #terminal-scrollport {
+    animation: crt-flicker 0.12s infinite;
+}
+
+@keyframes crt-flicker {
+    0%   { opacity: 0.985; }
+    50%  { opacity: 1.0; }
+    100% { opacity: 0.99; }
+}
+
+/* ------------------------------------------------------------------------------
+ * 8. CUSTOM SCROLLBAR ILLUMINATION
+ * ------------------------------------------------------------------------------ */
+#terminal-scrollport {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+#terminal-scrollport::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#terminal-scrollport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#terminal-scrollport::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+    border: 2px solid var(--bg-color);
+}
+
+#terminal-scrollport::-webkit-scrollbar-thumb:hover {
+    background: var(--text-dimmed);
+}
+
+/* ------------------------------------------------------------------------------
+ * 9. RESPONSIVE DESIGN & MOBILE OPTIMIZATION
+ * ------------------------------------------------------------------------------ */
+@media (max-width: 640px) {
+    :root {
+        --font-size: 14.5px;
+        --line-height: 1.5;
+        --header-height: 40px;
+    }
+
+    .brand-title {
+        font-size: 0.8rem;
+    }
+
+    .btn-ctrl {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+    }
+
+    #input-container {
+        padding-bottom: 8px;
+    }
+}
+
+@media (max-width: 420px) {
+    .brand-badge {
+        display: none;
+    }
+}
+
+/* ------------------------------------------------------------------------------
+ * 10. SYSTEM NOTICES, SPINNERS & ALERTS
+ * ------------------------------------------------------------------------------ */
+.system-notice {
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    border-radius: 6px;
+    background: var(--bg-surface-elevated);
+    border-left: 4px solid var(--prompt-color);
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+.system-error {
+    background: rgba(239, 68, 68, 0.12);
+    border-left-color: var(--color-bright-red);
+    color: var(--color-bright-red);
+}
+
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--prompt-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Fictive-AI Interactive Fiction Terminal & Engine Shell">
+    <meta name="theme-color" content="#0b0e14">
+    <title>Fictive-AI Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="crt">
+    <!-- Atmospheric CRT Overlay -->
+    <div class="crt-overlay" aria-hidden="true"></div>
+
+    <!-- Application Shell -->
+    <div id="app-shell">
+        <!-- Top Navigation & Status Bar -->
+        <header id="header-bar" role="banner">
+            <div class="brand-section">
+                <span class="brand-title">Fictive-AI</span>
+                <span class="brand-badge">Pure C++17</span>
+            </div>
+
+            <div class="header-status">
+                <span id="status-indicator" class="status-dot connecting" aria-hidden="true"></span>
+                <span id="status-text">Initializing engine...</span>
+            </div>
+
+            <div class="header-controls">
+                <button type="button" id="btn-toggle-crt" class="btn-ctrl active" title="Toggle retro CRT scanline effect (Ctrl+Shift+C)">
+                    CRT: ON
+                </button>
+                <button type="button" id="btn-clear-screen" class="btn-ctrl" title="Clear terminal screen (Ctrl+L)">
+                    Clear
+                </button>
+            </div>
+        </header>
+
+        <!-- Terminal Scrollport & Output Buffer -->
+        <main id="terminal-scrollport" role="main" aria-label="Terminal Output Scrollport">
+            <div id="terminal-viewport">
+                <!-- System Loading Notice -->
+                <div id="system-loading" class="system-notice">
+                    <span class="spinner"></span>
+                    <span id="loading-message">Awakening Fictive-AI engine...</span>
+                </div>
+
+                <!-- Error Container -->
+                <div id="system-error" class="system-notice system-error" style="display: none;" role="alert"></div>
+
+                <!-- Output Buffer -->
+                <div id="output-buffer" role="log" aria-live="polite" aria-atomic="false"></div>
+
+                <!-- Command Input Row -->
+                <div id="input-container">
+                    <form id="command-form" autocomplete="off" spellcheck="false">
+                        <label id="prompt-label" class="prompt-label" for="command-input">&gt;</label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="command-input"
+                                name="command"
+                                autocomplete="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                placeholder="Type a command or 'help'..."
+                                disabled
+                            >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ----------------------------------------------------------------------
+         FICTIVE-AI UNIVERSAL JS BRIDGE & TERMINAL DRIVER
+         ---------------------------------------------------------------------- -->
+    <script>
+        (function() {
+            "use strict";
+
+            // DOM References
+            const scrollport = document.getElementById("terminal-scrollport");
+            const outputBuffer = document.getElementById("output-buffer");
+            const commandForm = document.getElementById("command-form");
+            const commandInput = document.getElementById("command-input");
+            const promptLabel = document.getElementById("prompt-label");
+            const statusIndicator = document.getElementById("status-indicator");
+            const statusText = document.getElementById("status-text");
+            const loadingNotice = document.getElementById("system-loading");
+            const errorNotice = document.getElementById("system-error");
+            const btnToggleCrt = document.getElementById("btn-toggle-crt");
+            const btnClearScreen = document.getElementById("btn-clear-screen");
+
+            // Terminal State
+            let commandHistory = [];
+            let historyIndex = -1;
+            let currentInputDraft = "";
+            let pendingInputResolver = null;
+            let isEngineReady = false;
+
+            window.inputQueue = [];
+
+            // ------------------------------------------------------------------
+            // ANSI ESCAPE SEQUENCE DECODER & HTML SANITIZER
+            // ------------------------------------------------------------------
+            const ANSI_STYLES_MAP = {
+                1: "style-bold",
+                2: "style-dim",
+                3: "style-italic",
+                4: "style-underline",
+                30: "style-black",
+                31: "style-red",
+                32: "style-green",
+                33: "style-yellow",
+                34: "style-blue",
+                35: "style-magenta",
+                36: "style-cyan",
+                37: "style-white",
+                90: "style-bright-black",
+                91: "style-bright-red",
+                92: "style-bright-green",
+                93: "style-bright-yellow",
+                94: "style-bright-blue",
+                95: "style-bright-magenta",
+                96: "style-bright-cyan",
+                97: "style-bright-white"
+            };
+
+            function escapeHtml(str) {
+                return str
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function ansiToHtml(rawText) {
+                if (!rawText) return "";
+
+                // Strip terminal clear / cursor position sequences
+                let cleaned = rawText
+                    .replace(/\x1b\[\?1049[hl]/g, "")
+                    .replace(/\x1b\[2J/g, "")
+                    .replace(/\x1b\[\d*(;\d+)*H/g, "");
+
+                const parts = cleaned.split(/(\x1b\[[0-9;]*m)/g);
+                let html = "";
+                let activeClasses = new Set();
+                let openSpansCount = 0;
+
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+                    if (!part) continue;
+
+                    const match = part.match(/^\x1b\[([0-9;]*)m$/);
+                    if (match) {
+                        const codesStr = match[1];
+                        if (!codesStr || codesStr === "0") {
+                            // Reset: close open spans
+                            while (openSpansCount > 0) {
+                                html += "</span>";
+                                openSpansCount--;
+                            }
+                            activeClasses.clear();
+                        } else {
+                            const codes = codesStr.split(";").map(Number);
+                            for (let c = 0; c < codes.length; c++) {
+                                const code = codes[c];
+                                if (code === 0) {
+                                    while (openSpansCount > 0) {
+                                        html += "</span>";
+                                        openSpansCount--;
+                                    }
+                                    activeClasses.clear();
+                                } else if (ANSI_STYLES_MAP[code]) {
+                                    const cls = ANSI_STYLES_MAP[code];
+                                    html += `<span class="${cls}">`;
+                                    openSpansCount++;
+                                    activeClasses.add(cls);
+                                }
+                            }
+                        }
+                    } else {
+                        html += escapeHtml(part);
+                    }
+                }
+
+                // Close remaining unclosed spans
+                while (openSpansCount > 0) {
+                    html += "</span>";
+                    openSpansCount--;
+                }
+
+                return html;
+            }
+
+            // ------------------------------------------------------------------
+            // SCROLLPORT & BUFFER OPERATIONS
+            // ------------------------------------------------------------------
+            function scrollToBottom() {
+                requestAnimationFrame(() => {
+                    scrollport.scrollTop = scrollport.scrollHeight;
+                });
+            }
+
+            function appendTerminalOutput(rawText) {
+                if (rawText === undefined || rawText === null) return;
+                const converted = ansiToHtml(String(rawText));
+                if (!converted) return;
+
+                const temp = document.createElement("div");
+                temp.innerHTML = converted;
+
+                while (temp.firstChild) {
+                    outputBuffer.appendChild(temp.firstChild);
+                }
+
+                scrollToBottom();
+            }
+
+            function clearScreen() {
+                outputBuffer.innerHTML = "";
+                scrollToBottom();
+            }
+
+            function setEngineStatus(state, message) {
+                statusIndicator.className = "status-dot " + (state || "ready");
+                statusText.textContent = message || (state === "ready" ? "Ready" : state);
+            }
+
+            function displayError(message) {
+                loadingNotice.style.display = "none";
+                errorNotice.style.display = "block";
+                errorNotice.innerHTML = `<strong>Runtime Notice:</strong> ${escapeHtml(message)}`;
+                setEngineStatus("error", "Engine failed");
+            }
+
+            // ------------------------------------------------------------------
+            // INPUT & HISTORY MANAGEMENT
+            // ------------------------------------------------------------------
+            function echoUserCommand(cmd) {
+                const echoDiv = document.createElement("div");
+                echoDiv.className = "terminal-line echo-command";
+                echoDiv.innerHTML = `<span class="prompt-symbol">&gt;</span>${escapeHtml(cmd)}`;
+                outputBuffer.appendChild(echoDiv);
+                scrollToBottom();
+            }
+
+            function handleCommandSubmit(cmd) {
+                cmd = cmd.trim();
+
+                // Echo to terminal
+                echoUserCommand(cmd);
+
+                // Command history management
+                if (cmd.length > 0) {
+                    commandHistory.push(cmd);
+                    historyIndex = commandHistory.length;
+                    currentInputDraft = "";
+                }
+
+                // Built-in terminal commands
+                if (cmd.toLowerCase() === "clear" || cmd.toLowerCase() === "cls") {
+                    clearScreen();
+                    resolveOrQueueInput("");
+                    return;
+                }
+
+                if (cmd.toLowerCase() === "quit" || cmd.toLowerCase() === "exit") {
+                    appendTerminalOutput("\nExiting session...\n");
+                }
+
+                resolveOrQueueInput(cmd);
+            }
+
+            function resolveOrQueueInput(cmd) {
+                if (typeof pendingInputResolver === "function") {
+                    const resolver = pendingInputResolver;
+                    pendingInputResolver = null;
+                    resolver(cmd);
+                } else {
+                    window.inputQueue.push(cmd);
+                }
+
+                // Send to Desktop Webview IPC if available
+                postToDesktopBridge(cmd);
+            }
+
+            // ------------------------------------------------------------------
+            // DESKTOP WEBVIEW IPC BRIDGE
+            // ------------------------------------------------------------------
+            function postToDesktopBridge(message) {
+                try {
+                    // Windows / WebView2
+                    if (window.chrome && window.chrome.webview && typeof window.chrome.webview.postMessage === "function") {
+                        window.chrome.webview.postMessage(message);
+                        return true;
+                    }
+                    // macOS / iOS / Linux WebKit
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.fictive) {
+                        window.webkit.messageHandlers.fictive.postMessage(message);
+                        return true;
+                    }
+                    // Generic desktopBridge interface
+                    if (window.desktopBridge && typeof window.desktopBridge.postMessage === "function") {
+                        window.desktopBridge.postMessage(message);
+                        return true;
+                    }
+                    // Python pywebview
+                    if (window.pywebview && window.pywebview.api && typeof window.pywebview.api.on_command === "function") {
+                        window.pywebview.api.on_command(message);
+                        return true;
+                    }
+                } catch (err) {
+                    console.warn("Desktop IPC postMessage warning:", err);
+                }
+                return false;
+            }
+
+            // Listen for incoming Desktop IPC messages
+            window.addEventListener("message", function(event) {
+                if (event.data !== undefined && event.data !== null) {
+                    if (typeof event.data === "string") {
+                        appendTerminalOutput(event.data);
+                    } else if (event.data.text) {
+                        appendTerminalOutput(event.data.text);
+                    }
+                }
+            });
+
+            if (window.chrome && window.chrome.webview && typeof window.chrome.webview.addEventListener === "function") {
+                window.chrome.webview.addEventListener("message", function(event) {
+                    if (event.data !== undefined) {
+                        appendTerminalOutput(event.data);
+                    }
+                });
+            }
+
+            // Global bridge hooks for native C++ host
+            window.fictive_print = function(text) {
+                appendTerminalOutput(text);
+            };
+
+            window.fictive_clear = function() {
+                clearScreen();
+            };
+
+            window.fictive_readLine = function() {
+                return new Promise(function(resolve) {
+                    if (window.inputQueue.length > 0) {
+                        resolve(window.inputQueue.shift());
+                    } else {
+                        pendingInputResolver = resolve;
+                    }
+                });
+            };
+
+            // Compatibility hook for input resolver property
+            Object.defineProperty(window, "resolveInput", {
+                get() { return pendingInputResolver; },
+                set(resolver) {
+                    pendingInputResolver = resolver;
+                    if (window.inputQueue.length > 0 && typeof pendingInputResolver === "function") {
+                        const r = pendingInputResolver;
+                        pendingInputResolver = null;
+                        r(window.inputQueue.shift());
+                    }
+                }
+            });
+
+            // ------------------------------------------------------------------
+            // KEYBOARD & USER INTERACTION LISTENERS
+            // ------------------------------------------------------------------
+            commandForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                const cmd = commandInput.value;
+                commandInput.value = "";
+                handleCommandSubmit(cmd);
+            });
+
+            commandInput.addEventListener("keydown", function(e) {
+                if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    if (commandHistory.length === 0) return;
+                    if (historyIndex === commandHistory.length) {
+                        currentInputDraft = commandInput.value;
+                    }
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        commandInput.value = commandHistory[historyIndex];
+                    }
+                } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        commandInput.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = commandHistory.length;
+                        commandInput.value = currentInputDraft;
+                    }
+                }
+            });
+
+            // Global keyboard shortcuts (Ctrl+L, Ctrl+Shift+C)
+            document.addEventListener("keydown", function(e) {
+                // Clear screen: Ctrl+L
+                if (e.ctrlKey && e.key.toLowerCase() === "l" && !e.shiftKey && !e.altKey) {
+                    e.preventDefault();
+                    clearScreen();
+                    return;
+                }
+
+                // Toggle CRT: Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") {
+                    e.preventDefault();
+                    toggleCrt();
+                    return;
+                }
+
+                // If typing and input is not focused (and not selecting text), autofocus input
+                if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+                    if (document.activeElement !== commandInput && window.getSelection().toString() === "") {
+                        commandInput.focus();
+                    }
+                }
+            });
+
+            // Focus retention: clicking anywhere on terminal refocuses input
+            scrollport.addEventListener("click", function() {
+                if (window.getSelection().toString() === "") {
+                    commandInput.focus();
+                }
+            });
+
+            // ------------------------------------------------------------------
+            // CRT & UI CONTROLS
+            // ------------------------------------------------------------------
+            function toggleCrt() {
+                const isCrt = document.body.classList.toggle("crt");
+                btnToggleCrt.classList.toggle("active", isCrt);
+                btnToggleCrt.textContent = isCrt ? "CRT: ON" : "CRT: OFF";
+                try {
+                    localStorage.setItem("fictive_crt", isCrt ? "1" : "0");
+                } catch (_) {}
+            }
+
+            btnToggleCrt.addEventListener("click", toggleCrt);
+            btnClearScreen.addEventListener("click", clearScreen);
+
+            // Restore CRT preference
+            try {
+                const savedCrt = localStorage.getItem("fictive_crt");
+                if (savedCrt === "0") {
+                    document.body.classList.remove("crt");
+                    btnToggleCrt.classList.remove("active");
+                    btnToggleCrt.textContent = "CRT: OFF";
+                }
+            } catch (_) {}
+
+            // ------------------------------------------------------------------
+            // EMSCRIPTEN / WEBASSEMBLY RUNTIME INTEGRATION
+            // ------------------------------------------------------------------
+            window.Module = {
+                locateFile: function(path) {
+                    return path;
+                },
+                print: function(text) {
+                    appendTerminalOutput(String(text) + "\n");
+                },
+                printErr: function(text) {
+                    console.warn("[Fictive-AI WASM]", text);
+                },
+                onRuntimeInitialized: function() {
+                    isEngineReady = true;
+                    loadingNotice.style.display = "none";
+                    commandInput.disabled = false;
+                    commandInput.focus();
+                    setEngineStatus("ready", "Ready");
+                    scrollToBottom();
+                },
+                onAbort: function(what) {
+                    displayError("WebAssembly execution aborted: " + what);
+                }
+            };
+
+            // Standalone Fallback / Desktop Webview Ready Initializer
+            window.addEventListener("DOMContentLoaded", function() {
+                // If not loading WASM via engine.js or if running inside Webview, enable input
+                setTimeout(function() {
+                    if (!isEngineReady && loadingNotice.style.display !== "none") {
+                        loadingNotice.style.display = "none";
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        setEngineStatus("ready", "Ready");
+                    }
+                }, 1200);
+            });
+
+        })();
+    </script>
+
+    <!-- Optional WebAssembly Engine Script (Loaded asynchronously if present) -->
+    <script async src="engine.js" onerror="/* Optional in standalone desktop webview mode */"></script>
+</body>
+</html>

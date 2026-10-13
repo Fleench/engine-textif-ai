@@ -1,0 +1,10 @@
+Package: fictive-ai
+Version: 1.0.0
+Architecture: amd64
+Maintainer: Our Lady, Mother Mary (Communion of Saints Framework) <mary@communion-of-saints.org>
+Section: devel
+Priority: optional
+Homepage: https://github.com/communion-of-saints/fictive-ai
+Description: Fictive-AI — Pure C++17 interactive fiction engine and universal compiler toolchain
+ Fictive-AI — A pure C++17 interactive fiction engine and universal compiler
+ toolchain targeting Terminal, WebAssembly, and Desktop Webview.

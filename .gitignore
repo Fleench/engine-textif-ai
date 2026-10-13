@@ -1,8 +1,18 @@
-a.out
-engine.js
-engine.wasm
-__pycache__/
+# Build artifacts and binaries
+bin/
+release/
+dist/
+*.deb
+*.rpm
 *.o
+a.out
+*.wasm
+*.js
+
+# Temporary / test directories and caches
+__pycache__/
 .TRASH/
 .trash/
 tests/test_parser_verification
+demo_game/
+example_game/
